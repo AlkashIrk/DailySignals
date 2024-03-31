@@ -38,3 +38,16 @@ class SubsInstruments:
             info_subs.append(InfoInstrument(figi=instrument.figi))
 
         return info_subs
+
+    def get_instrument_by_figi_dict(self):
+        """
+        Получение списка инструментов
+        :return:
+        """
+        instrument_dict = {}
+
+        for instrument in self.instruments:
+            instrument: Instrument = instrument
+            instrument_dict.update({instrument.figi: instrument})
+
+        return instrument_dict

@@ -3,8 +3,9 @@ from tinkoff.invest import AsyncClient, Client
 from model.AuthData import AuthData
 
 
-def authorize(auth: AuthData, is_async=False) -> AsyncClient:
-    if is_async:
-        return AsyncClient(token=auth.token)
-    else:
-        return Client(token=auth.token)
+def authorize_async(auth: AuthData) -> AsyncClient:
+    return AsyncClient(token=auth.token)
+
+
+def authorize(auth: AuthData) -> Client:
+    return Client(token=auth.token)

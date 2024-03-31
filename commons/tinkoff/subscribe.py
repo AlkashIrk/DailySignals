@@ -1,15 +1,22 @@
 import asyncio
 from time import sleep
+from typing import List
 
-from tinkoff.invest import SubscriptionInterval
 from tinkoff.invest import TradingStatus, MarketDataResponse, Candle
 from tinkoff.invest.market_data_stream.async_market_data_stream_manager import AsyncMarketDataStreamManager
 
 from commons.instruments import load_instruments
-from commons.tinkoff.api_v2 import authorize
+from commons.tinkoff.api_v2 import authorize_async
+from commons.tinkoff.history_data import get_history_candles
 from model.AuthData import AuthData
 from model.Config import Config
 from model.SubsInstruments import SubsInstruments
+
+# коллекция свечей по инструменту с ключем FIGI
+CANDLES_IN_MEMORY = {}
+
+# коллекция инструментов с ключем FIGI
+INSTRUMENT_BY_FIGI = {}
 
 
 def connect_to_api():
@@ -17,14 +24,18 @@ def connect_to_api():
     Подключение к API
     :return:
     """
+
+    global INSTRUMENT_BY_FIGI
     # объект для авторизации
     auth = AuthData(token=Config().tinkoff_token)
 
     # задаем список интересующих инструментов и интервал для подписки на свечи
     instruments = SubsInstruments(
-        interval=SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIFTEEN_MINUTES,
+        interval=Config().subscription_interval,
         instruments=load_instruments()
     )
+
+    INSTRUMENT_BY_FIGI = instruments.get_instrument_by_figi_dict()
 
     try:
         asyncio.run(subscribe(auth, instruments))
@@ -41,8 +52,12 @@ async def subscribe(auth: AuthData,
     :param instruments: список инструментов, для подписки
     :return:
     """
+
+    # загрузка исторических свечей перед подпиской на свечи
+    prepare_candles_in_memory()
+
     while True:
-        async with authorize(auth=auth, is_async=True) as client:
+        async with authorize_async(auth=auth) as client:
             # отписка от всех
             market_data_stream: AsyncMarketDataStreamManager = (
                 client.create_market_data_stream()
@@ -86,3 +101,20 @@ def info_event(event: TradingStatus):
     """
 
     figi = event.figi
+
+
+def prepare_candles_in_memory():
+    """
+    Проверка наличия достаточного количества свечей дял расчета осциляторов
+    :return:
+    """
+    global CANDLES_IN_MEMORY
+    global INSTRUMENT_BY_FIGI
+
+    for instrument in INSTRUMENT_BY_FIGI.values():
+        figi = instrument.figi
+        candles: List["HistoricCandle"] = CANDLES_IN_MEMORY.get(figi)
+
+        if candles is None:
+            historic = get_history_candles(instrument=instrument)
+            CANDLES_IN_MEMORY.update({figi: historic})

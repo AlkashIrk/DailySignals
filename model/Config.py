@@ -1,7 +1,16 @@
 import configparser
 import os
 
+from tinkoff.invest import SubscriptionInterval
+
+# путь до конфигурации по умолчанию
 DEFAULT_CONFIG_PATH = "config/config.cfg"
+
+# подписка на интервал в 15 минут по умолчанию
+DEFAULT_SUBSCRIPTION_INTERVAL = SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIFTEEN_MINUTES
+
+# количество используемых свечей для расчета индикаторов 100 по умолчанию
+DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE = 100
 
 
 def singleton(class_):
@@ -29,8 +38,20 @@ class Config:
     # токен для отправки сообщений в телеграм
     telegram_token: str
 
+    # интервал подписки
+    subscription_interval: SubscriptionInterval
+
+    # минимальное количество свечей для расчета
+    candles_for_calculation_min_size: int
+
     def __init__(self, config_path=DEFAULT_CONFIG_PATH):
         self.config_path = config_path
+
+        # интервал подписки по умолчанию
+        self.subscription_interval = DEFAULT_SUBSCRIPTION_INTERVAL
+
+        # количество свечей для расчета
+        self.candles_for_calculation_min_size = DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE
 
         # чтение файла конфигурации
         self.__read_config()
