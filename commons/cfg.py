@@ -29,4 +29,4 @@ def read_config():
         exit(0)
 
     config = configparser.ConfigParser(interpolation=None)
-    config.read(global_vars.config_path)
+    config.read(global_vars.config_path, encoding="UTF-8")
