@@ -6,7 +6,7 @@ def check_config_params():
     var_name = "tinkoff_token"
     check_param = get_param_from_cfg("Main", var_name, print_error=True, terminate=True)
     if check_param is not None:
-        global_vars.token = check_param
+        global_vars.tinkoff_token = check_param
 
     var_name = "telegram_token"
     check_param = get_param_from_cfg("Main", var_name, print_error=True, terminate=True)
