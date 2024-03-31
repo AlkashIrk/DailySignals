@@ -5,10 +5,10 @@ from tinkoff.invest import SubscriptionInterval
 from tinkoff.invest import TradingStatus, MarketDataResponse, Candle
 from tinkoff.invest.market_data_stream.async_market_data_stream_manager import AsyncMarketDataStreamManager
 
-from commons import global_vars
 from commons.instruments import load_instruments
 from commons.tinkoff.api_v2 import authorize
 from model.AuthData import AuthData
+from model.Config import Config
 from model.SubsInstruments import SubsInstruments
 
 
@@ -18,7 +18,7 @@ def connect_to_api():
     :return:
     """
     # объект для авторизации
-    auth = AuthData(token=global_vars.tinkoff_token)
+    auth = AuthData(token=Config().tinkoff_token)
 
     # задаем список интересующих инструментов и интервал для подписки на свечи
     instruments = SubsInstruments(
