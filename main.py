@@ -1,5 +1,6 @@
 from commons import global_vars
 from commons.cfg import get_param_from_cfg, read_config
+from commons.tinkoff.subscribe import connect_to_api
 
 
 def check_config_params():
@@ -19,3 +20,6 @@ if __name__ == '__main__':
     read_config()
     # применяем параметры из него
     check_config_params()
+
+    # подключаемся к API Tinkoff
+    connect_to_api()
