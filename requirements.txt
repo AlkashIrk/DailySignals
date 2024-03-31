@@ -1,0 +1,10 @@
+cachetools==5.3.3
+deprecation==2.1.0
+grpcio==1.62.1
+packaging==24.0
+protobuf==4.25.3
+python-dateutil==2.9.0.post0
+pytz==2024.1
+six==1.16.0
+tinkoff==0.1.1
+tinkoff-investments==0.2.0b97
