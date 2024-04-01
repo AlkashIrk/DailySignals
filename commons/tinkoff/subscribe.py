@@ -1,25 +1,15 @@
 import asyncio
 from time import sleep
-from typing import List
 
-from dateutil.tz import tz
 from tinkoff.invest import TradingStatus, MarketDataResponse, Candle
 from tinkoff.invest.market_data_stream.async_market_data_stream_manager import AsyncMarketDataStreamManager
 
 from commons.instruments import load_instruments
 from commons.tinkoff.api_v2 import authorize_async
-from commons.tinkoff.history_data import get_history_candles
 from model.AuthData import AuthData
-from model.CandlesInfo import CandlesInfo, CandleInfo
 from model.Config import Config
-from model.Instrument import Instrument
+from model.MemRepository import MemRepository
 from model.SubsInstruments import SubsInstruments
-
-# коллекция свечей по инструменту с ключем FIGI
-CANDLES_IN_MEMORY = {}
-
-# коллекция инструментов с ключем FIGI
-INSTRUMENT_BY_FIGI = {}
 
 
 def connect_to_api():
@@ -28,7 +18,6 @@ def connect_to_api():
     :return:
     """
 
-    global INSTRUMENT_BY_FIGI
     # объект для авторизации
     auth = AuthData(token=Config().tinkoff_token)
 
@@ -38,7 +27,8 @@ def connect_to_api():
         instruments=load_instruments()
     )
 
-    INSTRUMENT_BY_FIGI = instruments.get_instrument_by_figi_dict()
+    # заполняем inMemory репозиторий инструментами и историческими свечами
+    MemRepository().update_instruments(instruments.get_instrument_by_figi_dict())
 
     try:
         asyncio.run(subscribe(auth, instruments))
@@ -55,9 +45,6 @@ async def subscribe(auth: AuthData,
     :param instruments: список инструментов, для подписки
     :return:
     """
-
-    # загрузка исторических свечей перед подпиской на свечи
-    prepare_candles_in_memory()
 
     while True:
         async with authorize_async(auth=auth) as client:
@@ -93,15 +80,8 @@ def candle_event(event: Candle):
     :return:
     """
 
-    figi = event.figi
-
-    candle = CandleInfo().fill_by_candle_event(candle=event)
-    candle.print(instrument=INSTRUMENT_BY_FIGI.get(figi),
-                 to_zone=tz.gettz("Europe/Moscow"))
-
-    candles = get_candles(event)
-    candles.append(event)
-    CANDLES_IN_MEMORY.update({figi: candles})
+    # обновляем репозиторий свежими данными
+    MemRepository().update_candles(event=event, print_to_console=True)
 
 
 def info_event(event: TradingStatus):
@@ -112,43 +92,3 @@ def info_event(event: TradingStatus):
     """
 
     figi = event.figi
-
-
-def prepare_candles_in_memory():
-    """
-    Проверка наличия достаточного количества свечей дял расчета осциляторов
-    :return:
-    """
-    global CANDLES_IN_MEMORY
-    global INSTRUMENT_BY_FIGI
-
-    for instrument in INSTRUMENT_BY_FIGI.values():
-        instrument: Instrument = instrument
-        figi = instrument.figi
-        candles_in_memory: List["HistoricCandle"] = CANDLES_IN_MEMORY.get(figi)
-
-        if candles_in_memory is None:
-            historic = get_history_candles(instrument=instrument)
-            candles_info = CandlesInfo(instrument, Config().subscription_interval)
-            candles_info.append_historic(historic)
-            CANDLES_IN_MEMORY.update({figi: candles_info})
-
-
-def get_candles(event: Candle) -> CandlesInfo:
-    """
-    Получение свечей по инструменту из памяти
-    :param event:
-    :return:
-    """
-    global CANDLES_IN_MEMORY
-    global INSTRUMENT_BY_FIGI
-
-    figi = event.figi
-    interval = event.interval
-
-    candles = CANDLES_IN_MEMORY.get(figi)
-    if candles is None:
-        instrument: Instrument = INSTRUMENT_BY_FIGI.get(figi)
-        candles: CandlesInfo = CandlesInfo(instrument, interval)
-
-    return candles

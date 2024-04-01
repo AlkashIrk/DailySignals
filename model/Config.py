@@ -3,6 +3,8 @@ import os
 
 from tinkoff.invest import SubscriptionInterval
 
+from model.Singleton import Singleton
+
 # путь до конфигурации по умолчанию
 DEFAULT_CONFIG_PATH = "config/config.cfg"
 
@@ -13,19 +15,7 @@ DEFAULT_SUBSCRIPTION_INTERVAL = SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIFTE
 DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE = 100
 
 
-def singleton(class_):
-    instances = {}
-
-    def getinstance(*args, **kwargs):
-        if class_ not in instances:
-            instances[class_] = class_(*args, **kwargs)
-        return instances[class_]
-
-    return getinstance
-
-
-@singleton
-class Config:
+class Config(Singleton):
     # путь до файла конфигурации
     config_path: str
 

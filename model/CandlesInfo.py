@@ -1,5 +1,3 @@
-import logging
-from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
@@ -10,7 +8,6 @@ from commons.tinkoff.api_v2 import get_float_from_quo
 from model.Instrument import Instrument
 
 
-@dataclass
 class CandlesInfo:
     instrument: Instrument
     interval: SubscriptionInterval
@@ -28,14 +25,9 @@ class CandlesInfo:
         )
         return value
 
-    def append(self, candle: Candle):
-        if candle.figi == self.instrument.figi:
-            ca = CandleInfo().fill_by_candle_event(candle=candle)
-            self.candles.discard(ca)
-            self.candles.add(ca)
-        else:
-            logging.warning("Wrong FIGI, candle={candle}, expected={exc}"
-                            .format(candle=candle.figi, exc=self.instrument.figi))
+    def append(self, candle_info: Optional["CandleInfo"]):
+        self.candles.discard(candle_info)
+        self.candles.add(candle_info)
 
     def append_historic(self, historic: List["HistoricCandle"]):
         for historic_candle in historic:
@@ -55,17 +47,17 @@ class CandleInfo:
     low: float
     high: float
 
-    def fill_by_candle_event(self, candle: Candle):
-        self.figi = candle.figi
-        self.interval = candle.interval
+    def fill_by_candle_event(self, candle_event: Candle):
+        self.figi = candle_event.figi
+        self.interval = candle_event.interval
 
-        self.time = candle.time
-        self.volume = candle.volume
+        self.time = candle_event.time
+        self.volume = candle_event.volume
 
-        self.open = get_float_from_quo(candle.open)
-        self.close = get_float_from_quo(candle.close)
-        self.low = get_float_from_quo(candle.low)
-        self.high = get_float_from_quo(candle.high)
+        self.open = get_float_from_quo(candle_event.open)
+        self.close = get_float_from_quo(candle_event.close)
+        self.low = get_float_from_quo(candle_event.low)
+        self.high = get_float_from_quo(candle_event.high)
         return self
 
     def fill_by_history(self,
