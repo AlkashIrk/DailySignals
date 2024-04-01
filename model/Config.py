@@ -14,6 +14,9 @@ DEFAULT_SUBSCRIPTION_INTERVAL = SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIFTE
 # количество используемых свечей для расчета индикаторов 100 по умолчанию
 DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE = 100
 
+# интервал (в минутах) для расчета сигналов
+DEFAULT_CALCULATE_SIGNALS_INTERVAL = 10
+
 
 class Config(Singleton):
     # путь до файла конфигурации
@@ -34,6 +37,9 @@ class Config(Singleton):
     # минимальное количество свечей для расчета
     candles_for_calculation_min_size: int
 
+    # интервал (в минутах) для расчета сигналов
+    calculate_signals_interval: int
+
     def __init__(self, config_path=DEFAULT_CONFIG_PATH):
         self.config_path = config_path
 
@@ -42,6 +48,9 @@ class Config(Singleton):
 
         # количество свечей для расчета
         self.candles_for_calculation_min_size = DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE
+
+        # интервал (в минутах) для расчета сигналов
+        self.calculate_signals_interval = DEFAULT_CALCULATE_SIGNALS_INTERVAL
 
         # чтение файла конфигурации
         self.__read_config()

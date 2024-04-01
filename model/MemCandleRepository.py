@@ -2,13 +2,15 @@ from dateutil.tz import tz
 from tinkoff.invest import Candle
 
 from commons.tinkoff.history_data import get_history_candles
+from events.CandleEvent import CandleEvent
+from events.EventBus import EventBus
 from model.CandlesInfo import CandlesInfo, CandleInfo
 from model.Config import Config
 from model.Instrument import Instrument
 from model.Singleton import Singleton
 
 
-class MemRepository(Singleton):
+class MemCandleRepository(Singleton):
     """
     inMemory репозиторий инструментов и свечей
     """
@@ -34,11 +36,14 @@ class MemRepository(Singleton):
 
         candle = CandleInfo().fill_by_candle_event(candle_event=event)
         if print_to_console:
-            candle.print(instrument=MemRepository().instruments.get(figi),
+            candle.print(instrument=MemCandleRepository().instruments.get(figi),
                          to_zone=tz.gettz("Europe/Moscow"))
 
         candles.append(candle_info=candle)
         self.candles.update({figi: candles})
+
+        # сообщение в EventBus о новой свече
+        EventBus().emit(CandleEvent.event_name(), figi)
 
     def __get_candles(self, event: Candle) -> CandlesInfo:
         """

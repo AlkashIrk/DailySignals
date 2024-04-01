@@ -6,9 +6,10 @@ from tinkoff.invest.market_data_stream.async_market_data_stream_manager import A
 
 from commons.instruments import load_instruments
 from commons.tinkoff.api_v2 import authorize_async
+from events.EventBus import EventBus
 from model.AuthData import AuthData
 from model.Config import Config
-from model.MemRepository import MemRepository
+from model.MemCandleRepository import MemCandleRepository
 from model.SubsInstruments import SubsInstruments
 
 
@@ -27,8 +28,11 @@ def connect_to_api():
         instruments=load_instruments()
     )
 
+    # инициируем шину событий, для обмена сообщений
+    EventBus()
+
     # заполняем inMemory репозиторий инструментами и историческими свечами
-    MemRepository().update_instruments(instruments.get_instrument_by_figi_dict())
+    MemCandleRepository().update_instruments(instruments.get_instrument_by_figi_dict())
 
     try:
         asyncio.run(subscribe(auth, instruments))
@@ -81,7 +85,7 @@ def candle_event(event: Candle):
     """
 
     # обновляем репозиторий свежими данными
-    MemRepository().update_candles(event=event, print_to_console=True)
+    MemCandleRepository().update_candles(event=event, print_to_console=True)
 
 
 def info_event(event: TradingStatus):
