@@ -2,6 +2,7 @@ import asyncio
 from time import sleep
 from typing import List
 
+from dateutil.tz import tz
 from tinkoff.invest import TradingStatus, MarketDataResponse, Candle
 from tinkoff.invest.market_data_stream.async_market_data_stream_manager import AsyncMarketDataStreamManager
 
@@ -9,7 +10,9 @@ from commons.instruments import load_instruments
 from commons.tinkoff.api_v2 import authorize_async
 from commons.tinkoff.history_data import get_history_candles
 from model.AuthData import AuthData
+from model.CandlesInfo import CandlesInfo, CandleInfo
 from model.Config import Config
+from model.Instrument import Instrument
 from model.SubsInstruments import SubsInstruments
 
 # коллекция свечей по инструменту с ключем FIGI
@@ -92,6 +95,14 @@ def candle_event(event: Candle):
 
     figi = event.figi
 
+    candle = CandleInfo().fill_by_candle_event(candle=event)
+    candle.print(instrument=INSTRUMENT_BY_FIGI.get(figi),
+                 to_zone=tz.gettz("Europe/Moscow"))
+
+    candles = get_candles(event)
+    candles.append(event)
+    CANDLES_IN_MEMORY.update({figi: candles})
+
 
 def info_event(event: TradingStatus):
     """
@@ -112,9 +123,32 @@ def prepare_candles_in_memory():
     global INSTRUMENT_BY_FIGI
 
     for instrument in INSTRUMENT_BY_FIGI.values():
+        instrument: Instrument = instrument
         figi = instrument.figi
-        candles: List["HistoricCandle"] = CANDLES_IN_MEMORY.get(figi)
+        candles_in_memory: List["HistoricCandle"] = CANDLES_IN_MEMORY.get(figi)
 
-        if candles is None:
+        if candles_in_memory is None:
             historic = get_history_candles(instrument=instrument)
-            CANDLES_IN_MEMORY.update({figi: historic})
+            candles_info = CandlesInfo(instrument, Config().subscription_interval)
+            candles_info.append_historic(historic)
+            CANDLES_IN_MEMORY.update({figi: candles_info})
+
+
+def get_candles(event: Candle) -> CandlesInfo:
+    """
+    Получение свечей по инструменту из памяти
+    :param event:
+    :return:
+    """
+    global CANDLES_IN_MEMORY
+    global INSTRUMENT_BY_FIGI
+
+    figi = event.figi
+    interval = event.interval
+
+    candles = CANDLES_IN_MEMORY.get(figi)
+    if candles is None:
+        instrument: Instrument = INSTRUMENT_BY_FIGI.get(figi)
+        candles: CandlesInfo = CandlesInfo(instrument, interval)
+
+    return candles
