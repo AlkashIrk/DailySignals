@@ -2,12 +2,14 @@ from dateutil.tz import tz
 from tinkoff.invest import Candle
 
 from commons.tinkoff.history_data import get_history_candles
+from events.CalculateIndicatorsEvent import CalculateIndicatorsEvent
 from events.CandleEvent import CandleEvent
 from events.EventBus import EventBus
 from model.CandlesInfo import CandlesInfo, CandleInfo
 from model.Config import Config
 from model.Instrument import Instrument
 from model.Singleton import Singleton
+from signals.model.PandasData import PandasData
 
 
 class MemCandleRepository(Singleton):
@@ -33,6 +35,7 @@ class MemCandleRepository(Singleton):
         :return: 
         """""
         figi = event.figi
+        interval = event.interval
 
         candles = cls.__get_candles(event)
 
@@ -45,12 +48,32 @@ class MemCandleRepository(Singleton):
         cls.candles.update({figi: candles})
 
         # сообщение в EventBus о новой свече
-        EventBus().emit(CandleEvent.event_name(), CandleEvent(figi))
+        EventBus.emit(CandleEvent.event_name(),
+                      CandleEvent(figi=figi, interval=interval)
+                      )
 
     @classmethod
     def __get_candles(cls, event: Candle) -> CandlesInfo:
         """
         Получение свечей по Candel-event из памяти
+        :param event:
+        :return:
+        """
+
+        figi = event.figi
+        interval = event.interval
+
+        candles = cls.candles.get(figi)
+        if candles is None:
+            instrument: Instrument = cls.instruments.get(figi)
+            candles: CandlesInfo = CandlesInfo(instrument, interval)
+
+        return candles
+
+    @classmethod
+    def __get_candles_by_indicator_event(cls, event: CalculateIndicatorsEvent) -> CandlesInfo:
+        """
+        Получение свечей по CalculateIndicatorsEvent из памяти
         :param event:
         :return:
         """
@@ -82,3 +105,8 @@ class MemCandleRepository(Singleton):
                 candles_info = CandlesInfo(instrument, Config().subscription_interval)
                 candles_info.append_historic(historic)
                 cls.candles.update({figi: candles_info})
+
+    @classmethod
+    def get_pandas_data(cls, event: CalculateIndicatorsEvent) -> PandasData:
+        candles = cls.__get_candles_by_indicator_event(event)
+        return PandasData(candles=candles)

@@ -1,26 +1,21 @@
-from typing import Any
+from typing import Any, Optional
 
 from pyee import EventEmitter
+from pyee.base import Handler
 
-from events.CandleEvent import CandleEvent
-from model.MemSignalRepository import MemSignalRepository
 from model.Singleton import Singleton
 
 
 class EventBus(Singleton):
-    ee: EventEmitter
+    ee = EventEmitter()
 
-    def __init__(self):
-        self.ee = EventEmitter()
-
-        # регистрация вызова методов по события
-        self.__configure()
-
-    def emit(self,
+    @classmethod
+    def emit(cls,
              event: str,
              *args: Any,
              **kwargs: Any, ):
-        self.ee.emit(event, *args, **kwargs)
+        cls.ee.emit(event, *args, **kwargs)
 
-    def __configure(self):
-        self.ee.on(CandleEvent.event_name(), MemSignalRepository.calculate)
+    @classmethod
+    def register_handler(cls, event: str, f: Optional[Handler] = None):
+        cls.ee.on(event, f)

@@ -6,7 +6,7 @@ from tinkoff.invest.market_data_stream.async_market_data_stream_manager import A
 
 from commons.instruments import load_instruments
 from commons.tinkoff.api_v2 import authorize_async
-from events.EventBus import EventBus
+from events.config import init_event_bus
 from model.AuthData import AuthData
 from model.Config import Config
 from model.MemCandleRepository import MemCandleRepository
@@ -29,7 +29,7 @@ def connect_to_api():
     )
 
     # инициируем шину событий, для обмена сообщений
-    EventBus()
+    init_event_bus()
 
     # заполняем inMemory репозиторий инструментами и историческими свечами
     MemCandleRepository.update_instruments(instruments.get_instrument_by_figi_dict())
