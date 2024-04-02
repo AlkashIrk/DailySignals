@@ -86,6 +86,9 @@ class CandleInfo:
     def __hash__(self):
         return hash((self.figi, self.interval, self.time))
 
+    def __lt__(self, other):
+        return self.time.__lt__(other.time)
+
     def __str__(self):
         value = "{time} o={open} c={close} low={low} high={high} v={volume}".format(
             time=self.time,

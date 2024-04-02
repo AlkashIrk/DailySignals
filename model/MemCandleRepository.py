@@ -86,6 +86,14 @@ class MemCandleRepository(Singleton):
             instrument: Instrument = cls.instruments.get(figi)
             candles: CandlesInfo = CandlesInfo(instrument, interval)
 
+        # проверяем размер коллекции свечей в памяти
+        # при необходимости оставляем только последние актуальные
+        candles_limit_size = Config().candles_for_calculation_min_size
+        if len(candles.candles) > candles_limit_size:
+            candles_sorted_list = list(candles.candles)
+            candles_sorted_list.sort()
+            candles.candles = set(candles_sorted_list[-candles_limit_size:])
+
         return candles
 
     @classmethod
