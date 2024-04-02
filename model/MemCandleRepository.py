@@ -43,7 +43,7 @@ class MemCandleRepository(Singleton):
         self.candles.update({figi: candles})
 
         # сообщение в EventBus о новой свече
-        EventBus().emit(CandleEvent.event_name(), figi)
+        EventBus().emit(CandleEvent.event_name(), CandleEvent(figi))
 
     def __get_candles(self, event: Candle) -> CandlesInfo:
         """
