@@ -23,4 +23,4 @@ class EventBus(Singleton):
         self.ee.emit(event, *args, **kwargs)
 
     def __configure(self):
-        self.ee.on(CandleEvent.event_name(), MemSignalRepository().calculate)
+        self.ee.on(CandleEvent.event_name(), MemSignalRepository.calculate)

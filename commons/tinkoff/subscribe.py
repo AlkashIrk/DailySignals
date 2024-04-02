@@ -32,7 +32,7 @@ def connect_to_api():
     EventBus()
 
     # заполняем inMemory репозиторий инструментами и историческими свечами
-    MemCandleRepository().update_instruments(instruments.get_instrument_by_figi_dict())
+    MemCandleRepository.update_instruments(instruments.get_instrument_by_figi_dict())
 
     try:
         asyncio.run(subscribe(auth, instruments))
@@ -85,7 +85,7 @@ def candle_event(event: Candle):
     """
 
     # обновляем репозиторий свежими данными
-    MemCandleRepository().update_candles(event=event, print_to_console=True)
+    MemCandleRepository.update_candles(event=event, print_to_console=True)
 
 
 def info_event(event: TradingStatus):
