@@ -1,6 +1,6 @@
 import pandas as pd
 
-from model.CandlesInfo import CandlesInfo
+from model.data_structure.CandlesInfo import CandlesInfo
 
 
 class PandasData:

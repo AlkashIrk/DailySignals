@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from tinkoff.invest import SubscriptionInterval, CandleInstrument, InfoInstrument
 
-from model.Instrument import Instrument
+from model.data_structure.Instrument import Instrument
 
 
 @dataclass

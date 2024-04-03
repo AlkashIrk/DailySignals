@@ -1,6 +1,6 @@
 from typing import List
 
-from model.Instrument import Instrument
+from model.data_structure.Instrument import Instrument
 
 
 def load_instruments() -> List[Instrument]:

@@ -1,6 +1,6 @@
-from events.CalculateIndicatorsEvent import CalculateIndicatorsEvent
-from model.MemCandleRepository import MemCandleRepository
-from signals.model.RSI import RSI
+from model.events.CalculateIndicatorsEvent import CalculateIndicatorsEvent
+from model.repository.MemCandleRepository import MemCandleRepository
+from model.signals.RSI import RSI
 
 
 def calculate_signals(event: CalculateIndicatorsEvent):

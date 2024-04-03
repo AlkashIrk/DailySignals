@@ -2,14 +2,14 @@ from dateutil.tz import tz
 from tinkoff.invest import Candle
 
 from commons.tinkoff.history_data import get_history_candles
-from events.CalculateIndicatorsEvent import CalculateIndicatorsEvent
-from events.CandleEvent import CandleEvent
-from events.EventBus import EventBus
-from model.CandlesInfo import CandlesInfo, CandleInfo
-from model.Config import Config
-from model.Instrument import Instrument
 from model.Singleton import Singleton
-from signals.model.PandasData import PandasData
+from model.config.Config import Config
+from model.data_structure.CandlesInfo import CandlesInfo, CandleInfo
+from model.data_structure.Instrument import Instrument
+from model.events.CalculateIndicatorsEvent import CalculateIndicatorsEvent
+from model.events.CandleEvent import CandleEvent
+from model.events.EventBus import EventBus
+from model.signals.PandasData import PandasData
 
 
 class MemCandleRepository(Singleton):

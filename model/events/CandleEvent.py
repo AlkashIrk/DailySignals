@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from tinkoff.invest import SubscriptionInterval
 
-from events.BaseEvent import BaseEvent
+from model.events.BaseEvent import BaseEvent
 
 
 @dataclass

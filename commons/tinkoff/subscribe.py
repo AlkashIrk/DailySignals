@@ -7,10 +7,10 @@ from tinkoff.invest.market_data_stream.async_market_data_stream_manager import A
 from commons.instruments import load_instruments
 from commons.tinkoff.api_v2 import authorize_async
 from events.config import init_event_bus
-from model.AuthData import AuthData
-from model.Config import Config
-from model.MemCandleRepository import MemCandleRepository
-from model.SubsInstruments import SubsInstruments
+from model.config.Config import Config
+from model.data_structure.AuthData import AuthData
+from model.data_structure.SubsInstruments import SubsInstruments
+from model.repository.MemCandleRepository import MemCandleRepository
 
 
 def connect_to_api():

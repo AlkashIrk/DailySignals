@@ -5,7 +5,7 @@ from dateutil.tz import tzlocal
 from tinkoff.invest import SubscriptionInterval, Candle, HistoricCandle
 
 from commons.tinkoff.api_v2 import get_float_from_quo
-from model.Instrument import Instrument
+from model.data_structure.Instrument import Instrument
 
 
 class CandlesInfo:

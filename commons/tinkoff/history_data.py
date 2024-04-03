@@ -6,9 +6,9 @@ from pytz import timezone
 from tinkoff.invest import SubscriptionInterval
 
 from commons.tinkoff.api_v2 import authorize
-from model.AuthData import AuthData
-from model.Config import Config
-from model.Instrument import Instrument
+from model.config.Config import Config
+from model.data_structure.AuthData import AuthData
+from model.data_structure.Instrument import Instrument
 
 
 def get_history_candles(

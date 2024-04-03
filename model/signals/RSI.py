@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import pandas as pd
 from ta.momentum import RSIIndicator
 
-from signals.model.PandasData import PandasData
-from signals.model.Signal import Signal
+from model.signals.PandasData import PandasData
+from model.signals.Signal import Signal
 
 
 @dataclass

@@ -1,7 +1,7 @@
 from tinkoff.invest import SubscriptionInterval
 
-from events.BaseEvent import BaseEvent
-from events.CandleEvent import CandleEvent
+from model.events.BaseEvent import BaseEvent
+from model.events.CandleEvent import CandleEvent
 
 
 class CalculateIndicatorsEvent(BaseEvent):

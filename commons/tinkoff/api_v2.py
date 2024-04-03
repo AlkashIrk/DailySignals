@@ -1,6 +1,6 @@
 from tinkoff.invest import AsyncClient, Client, Quotation
 
-from model.AuthData import AuthData
+from model.data_structure.AuthData import AuthData
 
 
 def authorize_async(auth: AuthData) -> AsyncClient:
