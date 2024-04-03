@@ -4,12 +4,12 @@ from dataclasses import dataclass
 import pandas as pd
 from ta.momentum import RSIIndicator
 
+from model.signals.Indicator import Indicator
 from model.signals.PandasData import PandasData
-from model.signals.Signal import Signal
 
 
 @dataclass
-class RSI(Signal):
+class RSI(Indicator):
     df: pd.DataFrame
     signal_name = "RSI"
     calc_time = 0

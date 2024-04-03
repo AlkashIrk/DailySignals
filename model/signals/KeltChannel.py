@@ -4,12 +4,12 @@ from dataclasses import dataclass
 import pandas as pd
 from ta.volatility import KeltnerChannel
 
-from model.signals import Signal
+from model.signals import Indicator
 from model.signals.PandasData import PandasData
 
 
 @dataclass
-class KeltChannel(Signal):
+class KeltChannel(Indicator):
     df: pd.DataFrame
     signal_name = "KeltnerChannel"
     calc_time = 0

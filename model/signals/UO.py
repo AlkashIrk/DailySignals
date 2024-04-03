@@ -4,12 +4,12 @@ from dataclasses import dataclass
 import pandas as pd
 from ta.momentum import UltimateOscillator
 
-from model.signals import Signal
+from model.signals import Indicator
 from model.signals.PandasData import PandasData
 
 
 @dataclass
-class UO(Signal):
+class UO(Indicator):
     df: pd.DataFrame
     signal_name = "UO"
     calc_time = 0

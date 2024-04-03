@@ -4,12 +4,12 @@ from dataclasses import dataclass
 import pandas as pd
 from ta.momentum import StochasticOscillator
 
+from model.signals.Indicator import Indicator
 from model.signals.PandasData import PandasData
-from model.signals.Signal import Signal
 
 
 @dataclass
-class STO(Signal):
+class STO(Indicator):
     df: pd.DataFrame
     signal_name = "STO"
     calc_time = 0

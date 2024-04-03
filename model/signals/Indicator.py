@@ -4,7 +4,7 @@ import pandas as pd
 
 
 @dataclass
-class Signal:
+class Indicator:
     df: pd.DataFrame
     signal_name = ""
     calc_time = 0
