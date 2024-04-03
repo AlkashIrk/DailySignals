@@ -11,4 +11,5 @@ class PandasData:
         info = candles.candles
         df = pd.DataFrame.from_records([i.to_dict() for i in info])
         df = df.sort_values(['time'])
+        df.set_index('time', inplace=True, drop=False)
         self.df = df
