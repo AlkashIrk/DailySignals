@@ -15,7 +15,7 @@ class Signal:
     def print_info(self):
         tab_counter = (24 - len(self.signal_name)) // 4
 
-        value = "{signal_name}{tabs}{prev:.2f}\t->\t{current:.2f} (t={time:.3f} ms)".format(
+        value = "{signal_name}{tabs}{prev:.2f}\t->\t{current:.2f}\t\t(t={time:.3f} ms)".format(
             signal_name=self.signal_name,
             tabs="\t" * tab_counter,
             prev=self.previous_value,
