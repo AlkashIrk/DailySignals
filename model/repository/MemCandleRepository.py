@@ -36,6 +36,7 @@ class MemCandleRepository(Singleton):
         """""
         figi = event.figi
         interval = event.interval
+        instrument: Instrument = MemCandleRepository.instruments.get(figi)
 
         candles = cls.__get_candles(event)
 
@@ -46,6 +47,9 @@ class MemCandleRepository(Singleton):
 
         candles.append(candle_info=candle)
         cls.candles.update({figi: candles})
+
+        # последнияя цена по инструменту
+        instrument.last_price = candle.close
 
         # сообщение в EventBus о новой свече
         EventBus.emit(CandleEvent.event_name(),
