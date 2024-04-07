@@ -23,6 +23,8 @@ class MemCandleRepository(Singleton):
     def update_instruments(cls, instruments_: dict):
         cls.instruments = instruments_
 
+        cls.candles.clear()
+
         # загрузка исторических свечей по инструментам
         cls.__prepare_candles()
 

@@ -31,13 +31,15 @@ def connect_to_api():
     # инициируем шину событий, для обмена сообщений
     init_event_bus()
 
-    # заполняем inMemory репозиторий инструментами и историческими свечами
-    MemCandleRepository.update_instruments(instruments.get_instrument_by_figi_dict())
-
-    try:
-        asyncio.run(subscribe(auth, instruments))
-    except Exception as inst:
-        print("\t%s" % inst)
+    while True:
+        try:
+            # заполняем inMemory репозиторий инструментами и историческими свечами
+            MemCandleRepository.update_instruments(instruments.get_instrument_by_figi_dict())
+            asyncio.run(subscribe(auth, instruments))
+        except Exception as inst:
+            # в случае потери связи, переподписываемся через 30 секунд
+            print("\t%s" % inst)
+            sleep(30)
 
 
 async def subscribe(auth: AuthData,
@@ -50,31 +52,27 @@ async def subscribe(auth: AuthData,
     :return:
     """
 
-    while True:
-        async with authorize_async(auth=auth) as client:
-            # отписка от всех
-            market_data_stream: AsyncMarketDataStreamManager = (
-                client.create_market_data_stream()
-            )
-            market_data_stream.stop()
-            sleep(1)
+    async with authorize_async(auth=auth) as client:
+        # отписка от всех
+        market_data_stream: AsyncMarketDataStreamManager = (
+            client.create_market_data_stream()
+        )
+        market_data_stream.stop()
+        sleep(1)
 
-            # подпсика на свечи
-            market_data_stream.candles.subscribe(instruments.get_subscribe_list_for_candles())
-            sleep(1)
+        # подпсика на свечи
+        market_data_stream.candles.subscribe(instruments.get_subscribe_list_for_candles())
+        sleep(1)
 
-            # подписка на торговые статусы инструментов и расписание торгов
-            market_data_stream.info.subscribe(instruments.get_subscribe_list_for_trade_info())
+        # подписка на торговые статусы инструментов и расписание торгов
+        market_data_stream.info.subscribe(instruments.get_subscribe_list_for_trade_info())
 
-            async for market_data in market_data_stream:
-                data: MarketDataResponse = market_data
-                if data.candle:
-                    candle_event(data.candle)
-                if data.trading_status:
-                    info_event(data.trading_status)
-
-        # в случае если подписка отвалится, переподписываемся через 30 секунд
-        sleep(30)
+        async for market_data in market_data_stream:
+            data: MarketDataResponse = market_data
+            if data.candle:
+                candle_event(data.candle)
+            if data.trading_status:
+                info_event(data.trading_status)
 
 
 def candle_event(event: Candle):
