@@ -1,8 +1,8 @@
+from model.signals.indicators.KeltChannel import KeltChannel
+from model.signals.indicators.RSI import RSI
+from model.signals.indicators.STO import STO
+from model.signals.indicators.UO import UO
 from .Indicator import Indicator
-from .KeltChannel import KeltChannel
-from .RSI import RSI
-from .STO import STO
-from .UO import UO
 
 __version__ = "0.0.1"
 

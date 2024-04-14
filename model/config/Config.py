@@ -8,6 +8,9 @@ from model.Singleton import Singleton
 # путь до конфигурации по умолчанию
 DEFAULT_CONFIG_PATH = "config/config.cfg"
 
+# путь до конфигурации сигналов по умолчанию
+DEFAULT_SIGNALS_CONFIG_PATH = "config/signals.yaml"
+
 # подписка на интервал в 15 минут по умолчанию
 DEFAULT_SUBSCRIPTION_INTERVAL = SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIFTEEN_MINUTES
 
@@ -21,6 +24,9 @@ DEFAULT_CALCULATE_SIGNALS_INTERVAL = 10
 class Config(Singleton):
     # путь до файла конфигурации
     config_path: str
+
+    # путь до файла конфигурации сигналов
+    config_signals_path = DEFAULT_SIGNALS_CONFIG_PATH
 
     #
     __configparser: configparser.ConfigParser

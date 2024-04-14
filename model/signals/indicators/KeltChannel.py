@@ -5,6 +5,7 @@ import pandas as pd
 from ta.volatility import KeltnerChannel
 
 from model.signals import Indicator
+from model.signals.Attributes import Attributes
 from model.signals.PandasData import PandasData
 
 
@@ -28,7 +29,9 @@ class KeltChannel(Indicator):
             window_atr=window_atr
         )
 
-        df[self.signal_name] = signal.keltner_channel_lband()
+        df[self.signal_name] = signal.keltner_channel_mband()
+        df[self.signal_name + Attributes.ind_h_band] = signal.keltner_channel_hband()
+        df[self.signal_name + Attributes.ind_l_band] = signal.keltner_channel_lband()
         self.df = df
         self.calc_time = time.time() - start_time
 

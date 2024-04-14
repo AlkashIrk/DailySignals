@@ -6,4 +6,4 @@ class Instrument:
     figi: str
     name: str
     ticker: str
-    last_price = 0
+    last_price: float = 0
