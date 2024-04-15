@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import pandas as pd
 from ta.momentum import UltimateOscillator
 
-from model.signals import Indicator
+from model.signals.Indicator import Indicator
 from model.signals.PandasData import PandasData
 
 

@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import pandas as pd
 from ta.volatility import KeltnerChannel
 
-from model.signals import Indicator
 from model.signals.Attributes import Attributes
+from model.signals.Indicator import Indicator
 from model.signals.PandasData import PandasData
 
 
