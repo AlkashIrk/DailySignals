@@ -1,0 +1,20 @@
+Main:
+  # токен для подключения к API Тинькофф Инвестиции
+  tinkoff_token: YOUR_TOKEN
+
+  # токен для отправки сообщений в телеграм
+  telegram_token: YOUR_TOKEN
+
+
+Subscription:
+  # подписка на свечи
+  interval: 1h
+
+  # интервал (в минутах) для расчета сигналов
+  calculate_signals_interval: 15
+
+  # минимальное количество свечей для расчета (чем больше, тем точнее значение, но тем и сложнее расчет)
+  candles_for_calculation_min_size: 100
+
+  # путь до файла конфигурации сигналов
+  signals_config_path: "config/signals.yaml"

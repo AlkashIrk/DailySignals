@@ -1,24 +1,29 @@
-import configparser
 import os
 
+import yaml
 from tinkoff.invest import SubscriptionInterval
 
+from commons.search_helper import case_insensitive
 from model.Singleton import Singleton
+from model.config.Attributes import Attributes
 
 # путь до конфигурации по умолчанию
-DEFAULT_CONFIG_PATH = "config/config.cfg"
+DEFAULT_CONFIG_PATH = "config/config.yaml"
 
 # путь до конфигурации сигналов по умолчанию
 DEFAULT_SIGNALS_CONFIG_PATH = "config/signals.yaml"
 
 # подписка на интервал в 15 минут по умолчанию
-DEFAULT_SUBSCRIPTION_INTERVAL = SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIFTEEN_MINUTES
+DEFAULT_SUBSCRIPTION_INTERVAL = "15m"
 
 # количество используемых свечей для расчета индикаторов 100 по умолчанию
 DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE = 100
 
-# интервал (в минутах) для расчета сигналов
-DEFAULT_CALCULATE_SIGNALS_INTERVAL = 10
+# интервалы для свечей
+allow_intervals = ["1m", "2m", "3m", "5m", "10m", "15m", "30m",
+                   "1h", "2h", "4h",
+                   "1day", "1week", "1month"
+                   ]
 
 
 class Config(Singleton):
@@ -26,10 +31,7 @@ class Config(Singleton):
     config_path: str
 
     # путь до файла конфигурации сигналов
-    config_signals_path = DEFAULT_SIGNALS_CONFIG_PATH
-
-    #
-    __configparser: configparser.ConfigParser
+    config_signals_path: str
 
     # токен для подключения к API Тинькофф Инвестиции
     tinkoff_token: str
@@ -46,32 +48,15 @@ class Config(Singleton):
     # интервал (в минутах) для расчета сигналов
     calculate_signals_interval: int
 
+    first_load = True
+
     def __init__(self, config_path=DEFAULT_CONFIG_PATH):
         self.config_path = config_path
 
-        # интервал подписки по умолчанию
-        self.subscription_interval = DEFAULT_SUBSCRIPTION_INTERVAL
-
-        # количество свечей для расчета
-        self.candles_for_calculation_min_size = DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE
-
-        # интервал (в минутах) для расчета сигналов
-        self.calculate_signals_interval = DEFAULT_CALCULATE_SIGNALS_INTERVAL
-
-        # чтение файла конфигурации
-        self.__read_config()
-
-        # назначение токена от investAPI
-        self.tinkoff_token = self.__get_param_from_cfg(section_name="Main",
-                                                       param_name="tinkoff_token",
-                                                       print_error=True,
-                                                       terminate=True)
-
-        # назначение токена от телеграма
-        self.telegram_token = self.__get_param_from_cfg(section_name="Main",
-                                                        param_name="telegram_token",
-                                                        print_error=True,
-                                                        terminate=True)
+        if self.first_load:
+            # чтение файла конфигурации
+            self.__read_config()
+            self.first_load = False
 
     def __read_config(self):
         if not os.path.isfile(self.config_path):
@@ -80,20 +65,188 @@ class Config(Singleton):
             print(text)
             exit(0)
 
-        self.__configparser = configparser.ConfigParser(interpolation=None)
-        self.__configparser.read(self.config_path, encoding="UTF-8")
-
-    def __get_param_from_cfg(self, section_name: str, param_name: str, print_error=False, terminate=False):
-        try:
-            value = self.__configparser.get(section_name, param_name)
-            return value
-        except Exception as e:
-            if print_error:
-                print("Возникла ошибка при чтении параметра конфигурации {param_name} из секции {section_name}".format(
-                    param_name=param_name,
-                    section_name=section_name
-                ))
-                print("Exception message:\n\t%s" % e)
-            if terminate:
+        with open(self.config_path, 'r', encoding="UTF-8") as file:
+            try:
+                yaml_cfg = yaml.safe_load(file)
+                self.__parse_yaml(cfg=yaml_cfg)
+            except Exception as e:
+                print("Exception on read cfg:\n\t%s" % e)
                 exit(0)
-            return None
+
+    def __parse_yaml(self, cfg: dict):
+        """
+        Парсинг YAML конфигурации
+        :param cfg:
+        :return:
+        """
+
+        self.__parse_main_section(cfg)
+        self.__parse_subscribe_section(cfg)
+
+    def __parse_main_section(self, cfg: dict):
+        """
+        Чтение основной секции конфигурации
+        :param cfg:
+        :return:
+        """
+        section = self.__check_that_section_exist(cfg=cfg, section_name=Attributes.main_section)
+
+        # чтение токена от investAPI
+        self.tinkoff_token = case_insensitive(target=section,
+                                              search_attribute=Attributes.tinkoff_token
+                                              )
+        # чтение токена от телеграма
+        self.telegram_token = case_insensitive(target=section,
+                                               search_attribute=Attributes.telegram_token
+                                               )
+
+    def __parse_subscribe_section(self, cfg: dict):
+        """
+        Чтение секции конфигурации по подписке на свечи
+        :param cfg:
+        :return:
+        """
+        section = self.__check_that_section_exist(cfg=cfg, section_name=Attributes.subs_section)
+
+        # количество свечей для расчета индикатора
+        self.__check_candles_size(section)
+
+        # интервал свечей для подписки
+        self.__check_interval(section)
+
+        # интервал (в минутах) для расчета сигналов
+        self.__check_signal_interval(section)
+
+        # конфигурация для расчета сигналов
+        self.__check_signal_config_path(section)
+
+    def __check_candles_size(self, section: dict):
+        """
+        Чтение и валидация параметра отвечающего за сбор минимального количества свечей для расчета индикаторов
+        :param section:
+        :return:
+        """
+        config_value = case_insensitive(target=section,
+                                        search_attribute=Attributes.candles_for_calculation_min_size,
+                                        default_value=DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE
+                                        )
+        if type(config_value) != int:
+            self.candles_for_calculation_min_size = DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE
+            text = "\tЗначение для параметра {param} установлено по умолчанию на: {def_value}".format(
+                param=Attributes.candles_for_calculation_min_size,
+                def_value=DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE
+            )
+            print(text)
+        else:
+            self.candles_for_calculation_min_size = config_value
+            if config_value < 100:
+                text = "\tЗначение для параметра {param} [{value}] меньше рекомендуемого значения: {def_value}".format(
+                    param=Attributes.candles_for_calculation_min_size,
+                    value=config_value,
+                    def_value=DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE
+                )
+                print(text)
+            elif config_value > DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE * 2:
+                text = "\tЗначение для параметра {param} [{value}] больше рекомендуемого значения: {def_value}".format(
+                    param=Attributes.candles_for_calculation_min_size,
+                    value=config_value,
+                    def_value=DEFAULT_CANDLES_FOR_CALCULATION_MIN_SIZE * 2
+                )
+                print(text)
+
+    def __check_interval(self, section: dict):
+        """
+        Чтение и валидация параметра отвечающего за подписку на определенный интервал свечей
+        :param section:
+        :return:
+        """
+        intervals = {
+            "1m": SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE,
+            "2m": SubscriptionInterval.SUBSCRIPTION_INTERVAL_2_MIN,
+            "3m": SubscriptionInterval.SUBSCRIPTION_INTERVAL_3_MIN,
+            "5m": SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIVE_MINUTES,
+            "10m": SubscriptionInterval.SUBSCRIPTION_INTERVAL_10_MIN,
+            "15m": SubscriptionInterval.SUBSCRIPTION_INTERVAL_FIFTEEN_MINUTES,
+            "30m": SubscriptionInterval.SUBSCRIPTION_INTERVAL_30_MIN,
+            "1h": SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_HOUR,
+            "2h": SubscriptionInterval.SUBSCRIPTION_INTERVAL_2_HOUR,
+            "4h": SubscriptionInterval.SUBSCRIPTION_INTERVAL_4_HOUR,
+            "1day": SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_DAY,
+            "1week": SubscriptionInterval.SUBSCRIPTION_INTERVAL_WEEK,
+            "1month": SubscriptionInterval.SUBSCRIPTION_INTERVAL_MONTH,
+        }
+
+        config_value = case_insensitive(target=section,
+                                        search_attribute=Attributes.interval
+                                        )
+        if config_value is not None:
+            config_value = str(config_value).lower()
+            value_exist = allow_intervals.__contains__(config_value)
+        else:
+            value_exist = False
+
+        if not value_exist:
+            text = "\tЗначение для параметра {param} установлено по умолчанию на: {def_value}".format(
+                param=Attributes.interval,
+                def_value=DEFAULT_SUBSCRIPTION_INTERVAL
+            )
+            print(text)
+            config_value = DEFAULT_SUBSCRIPTION_INTERVAL
+            text = "\tДопустимые значения для параметра: " + ' '.join(allow_intervals)
+            print(text)
+
+        self.subscription_interval = intervals.get(config_value.lower())
+
+    def __check_signal_interval(self, section: dict):
+        """
+        Чтение и валидация параметра отвечающего за интервал расчета сигналов по индикаторам
+        :param section:
+        :return:
+        """
+        config_value = case_insensitive(target=section,
+                                        search_attribute=Attributes.calculate_signals_interval
+                                        )
+        if type(config_value) != int:
+            self.calculate_signals_interval = 30
+            text = "\tЗначение для параметра {param} установлено по умолчанию на: {def_value} минут".format(
+                param=Attributes.calculate_signals_interval,
+                def_value=30
+            )
+            print(text)
+        else:
+            self.calculate_signals_interval = config_value
+
+    def __check_signal_config_path(self, section: dict):
+        """
+        Чтение и валидация параметра отвечающего за расположение файла конфигурации сигналов
+        :param section:
+        :return:
+        """
+        config_value = case_insensitive(target=section,
+                                        search_attribute=Attributes.signals_config_path,
+                                        default_value=DEFAULT_SIGNALS_CONFIG_PATH
+                                        )
+        if not os.path.isfile(config_value):
+            text = "\tФайл конфигурации для расчета сигналов не обнаружен.\n" \
+                   "\tОжидаемое место расположение конфигурации:\n\t{path}" \
+                .format(path=os.path.abspath(config_value))
+            print(text)
+            exit(0)
+        self.config_signals_path = config_value
+
+    def __check_that_section_exist(self, cfg: dict, section_name: str) -> dict:
+        """
+        Проверка наличия секции в файле конфигурации
+        :param cfg:
+        :param section_name:
+        :return:
+        """
+        section = case_insensitive(target=cfg,
+                                   search_attribute=section_name
+                                   )
+        if section is None:
+            text = "\tФайл конфигурации не содержит секции {section_name}".format(
+                section_name=section_name)
+            print(text)
+            exit(0)
+        return section

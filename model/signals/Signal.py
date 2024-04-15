@@ -28,8 +28,7 @@ class Signal:
         self.signal_triggers = {}
         self.used_indicators = set()
 
-    def read_config(self,
-                    file_path: str = Config.config_signals_path):
+    def read_config(self, file_path: str = None):
         """
         Чтение конфигурации для расчета сигналов по индикаторам
         :param file_path:
@@ -37,6 +36,9 @@ class Signal:
         """
         self.__get_indicators()
         yaml_cfg = {}
+
+        if file_path is None:
+            file_path = Config().config_signals_path
 
         if os.path.isfile(file_path):
             with open(file_path, 'r', encoding="UTF-8") as file:
