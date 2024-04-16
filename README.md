@@ -19,6 +19,8 @@
 `[telegram_chat_id]` - идентификатор канала, в который будут приходить уведомления.  
 
 #### Секция `[Subscription]`  
+`[csv_file_with_shares]` - путь до `csv` файла со списком инструментов (разделитель столбцов табуляция) 
+[(пример файла)](https://github.com/AlkashIrk/DailySignals/blob/main/config/shares_example.csv);  
 `[interval]` - определяет интервал свечей на которые осуществляется подписка;  
 Возможные значения: 
 
