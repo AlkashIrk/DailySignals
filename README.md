@@ -4,6 +4,8 @@
 телеграм канал.  
 Используется Tinkoff Invest API клиент для python. [Документация по API](https://russianinvestments.github.io/investAPI/).  
 
+Пример работы можно посмотреть в канале [по ссылке.](https://t.me/git_example_daily_signals)
+
 Параметры для работы со скриптом задаются в файлах конфигураций `config.yaml` и `signals.yaml`  
 
 <details>

@@ -36,8 +36,14 @@ class Config(Singleton):
     # токен для подключения к API Тинькофф Инвестиции
     tinkoff_token: str
 
+    # включены ли сообщения в Telegram
+    telegram_enabled: bool
+
     # токен для отправки сообщений в телеграм
     telegram_token: str
+
+    # ID чата для сообщения
+    telegram_chat_id: str
 
     # интервал подписки
     subscription_interval: SubscriptionInterval
@@ -99,6 +105,16 @@ class Config(Singleton):
         self.telegram_token = case_insensitive(target=section,
                                                search_attribute=Attributes.telegram_token
                                                )
+
+        # чтение ID чата
+        self.telegram_chat_id = case_insensitive(target=section,
+                                                 search_attribute=Attributes.telegram_chat_id
+                                                 )
+
+        if self.telegram_token is not None and self.telegram_chat_id is not None:
+            self.telegram_enabled = True
+        else:
+            self.telegram_enabled = False
 
     def __parse_subscribe_section(self, cfg: dict):
         """

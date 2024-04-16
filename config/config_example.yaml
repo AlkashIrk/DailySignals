@@ -5,6 +5,9 @@ Main:
   # токен для отправки сообщений в телеграм
   telegram_token: YOUR_TOKEN
 
+  # ID телеграм канала
+  telegram_chat_id: -1234567890
+
 
 Subscription:
   # подписка на свечи

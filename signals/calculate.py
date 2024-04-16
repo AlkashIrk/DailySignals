@@ -1,4 +1,6 @@
 from model.events.CalculateIndicatorsEvent import CalculateIndicatorsEvent
+from model.events.EventBus import EventBus
+from model.events.SignalEvent import SignalEvent
 from model.repository.MemCandleRepository import MemCandleRepository
 from model.signals.Signal import Signal
 
@@ -14,5 +16,12 @@ def calculate_signals(event: CalculateIndicatorsEvent):
 
     instrument = MemCandleRepository.instruments.get(event.figi)
     message = signals.get_console_message(instrument=instrument, triggered_signals=triggers_list)
-
     print(message)
+
+    # сообщение в EventBus о необходимости расчета индикаторов
+    EventBus.emit(SignalEvent.event_name(),
+                  SignalEvent(
+                      event=event,
+                      message=signals.get_tg_message(instrument=instrument, triggered_signals=triggers_list)
+                  )
+                  )

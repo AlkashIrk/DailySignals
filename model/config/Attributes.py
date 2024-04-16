@@ -8,6 +8,10 @@ class Attributes:
 
     # токен от телеграма
     telegram_token = "telegram_token"
+
+    # токен от телеграма
+    telegram_chat_id = "telegram_chat_id"
+
     # endregion
 
     # region метки для раздела Subscription

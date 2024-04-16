@@ -132,6 +132,47 @@ class Signal:
 
         return message
 
+    def get_tg_message(self, instrument: Instrument, triggered_signals: List[Trigger]):
+        level = 0
+        tab_char = "\t"
+        signal_description = ""
+        tinkoff_url = '<a href="https://www.tinkoff.ru/invest/stocks/{ticker}/">{name} ({ticker})</a>'
+
+        if self.signal_description is not None:
+            level += 1
+            signal_description = self.signal_description + "\n"
+
+        instrument_info = tab_char * level + tinkoff_url.format(
+            name=instrument.name,
+            ticker=instrument.ticker
+        )
+
+        price_info = tab_char * level + "Цена: {price}".format(price=instrument.last_price)
+        level += 1
+
+        signals = ""
+        for trigger in triggered_signals:
+            trigger: Trigger = trigger
+
+            tabs_level_1 = tab_char * level
+            tabs_level_2 = tab_char * (level + 1)
+
+            signals = signals + "\n{tabs_level_1}{indicator_name}\n{tabs_level_2}{message}".format(
+                tabs_level_1=tabs_level_1,
+                tabs_level_2=tabs_level_2,
+                indicator_name=trigger.indicator_name,
+                message=trigger.get_message()
+            )
+
+        message = "{signal_description}{instrument_info}\n{price_info}\n{signals}\n".format(
+            signal_description=signal_description,
+            instrument_info=instrument_info,
+            price_info=price_info,
+            signals=signals,
+        )
+
+        return message
+
     def __get_indicators(self):
         """
         Определяем какие индикаторы могут использоваться
