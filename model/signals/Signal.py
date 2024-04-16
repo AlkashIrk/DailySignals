@@ -6,6 +6,7 @@ from typing import List
 import yaml
 
 from commons.search_helper import case_insensitive
+from commons.сurrency_symbol import get_symbol
 from model.config.Config import Config
 from model.data_structure.Instrument import Instrument
 from model.signals import *
@@ -105,7 +106,10 @@ class Signal:
             ticker=instrument.ticker
         )
 
-        price_info = tab_char * level + "Цена: {price}".format(price=instrument.last_price)
+        price_info = tab_char * level + "Цена: {price}{currency_sign}".format(
+            price=instrument.last_price,
+            currency_sign=get_symbol(instrument.currency)
+        )
         level += 1
 
         signals = ""
@@ -147,7 +151,10 @@ class Signal:
             ticker=instrument.ticker
         )
 
-        price_info = tab_char * level + "Цена: {price}".format(price=instrument.last_price)
+        price_info = tab_char * level + "Цена: {price}{currency_sign}".format(
+            price=instrument.last_price,
+            currency_sign=get_symbol(instrument.currency)
+        )
         level += 1
 
         signals = ""
