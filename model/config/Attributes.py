@@ -15,6 +15,9 @@ class Attributes:
     # endregion
 
     # region метки для раздела Subscription
+    # список инструментов для подписки
+    csv_file_with_shares = "csv_file_with_shares"
+
     # подписка на свечи
     interval = "interval"
 

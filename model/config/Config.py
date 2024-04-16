@@ -13,6 +13,9 @@ DEFAULT_CONFIG_PATH = "config/config.yaml"
 # путь до конфигурации сигналов по умолчанию
 DEFAULT_SIGNALS_CONFIG_PATH = "config/signals.yaml"
 
+# путь до файла с инструментами
+DEFAULT_CSV_FILE = "config/shares.csv"
+
 # подписка на интервал в 15 минут по умолчанию
 DEFAULT_SUBSCRIPTION_INTERVAL = "15m"
 
@@ -44,6 +47,9 @@ class Config(Singleton):
 
     # ID чата для сообщения
     telegram_chat_id: str
+
+    # путь до файла с инструментами
+    csv_file_with_shares: str
 
     # интервал подписки
     subscription_interval: SubscriptionInterval
@@ -124,6 +130,9 @@ class Config(Singleton):
         """
         section = self.__check_that_section_exist(cfg=cfg, section_name=Attributes.subs_section)
 
+        # инструменты для подписки
+        self.__check_csv_file_with_shares(section)
+
         # количество свечей для расчета индикатора
         self.__check_candles_size(section)
 
@@ -135,6 +144,14 @@ class Config(Singleton):
 
         # конфигурация для расчета сигналов
         self.__check_signal_config_path(section)
+
+    def __check_csv_file_with_shares(self, section: dict):
+        config_value = case_insensitive(target=section,
+                                        search_attribute=Attributes.csv_file_with_shares,
+                                        default_value=DEFAULT_CSV_FILE
+                                        )
+        self.csv_file_with_shares = config_value
+
 
     def __check_candles_size(self, section: dict):
         """

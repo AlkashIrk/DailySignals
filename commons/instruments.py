@@ -1,6 +1,25 @@
+import os
 from typing import List
 
+import pandas as pd
+from tinkoff.invest import Share
+
 from model.data_structure.Instrument import Instrument
+
+CSV_SEPARATOR = '\t'
+
+
+def load_from_csv(file_path: str) -> List[Instrument]:
+    if not os.path.isfile(file_path):
+        text = "CSV файл инструментов не обнаружен.\n\tОжидаемое место расположение файла:\n\t{path}".format(
+            path=os.path.abspath(file_path))
+        print(text)
+        instruments = load_instruments()
+    else:
+        df = pd.read_csv(filepath_or_buffer=file_path, sep=CSV_SEPARATOR)
+        instruments = [Instrument(**kwargs) for kwargs in df.to_dict(orient='records')]
+
+    return instruments
 
 
 def load_instruments() -> List[Instrument]:

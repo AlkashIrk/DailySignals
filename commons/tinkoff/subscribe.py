@@ -4,7 +4,7 @@ from time import sleep
 from tinkoff.invest import TradingStatus, MarketDataResponse, Candle
 from tinkoff.invest.market_data_stream.async_market_data_stream_manager import AsyncMarketDataStreamManager
 
-from commons.instruments import load_instruments
+from commons.instruments import load_from_csv
 from commons.tinkoff.api_v2 import authorize_async
 from events.config import init_event_bus
 from model.config.Config import Config
@@ -25,7 +25,7 @@ def connect_to_api():
     # задаем список интересующих инструментов и интервал для подписки на свечи
     instruments = SubsInstruments(
         interval=Config().subscription_interval,
-        instruments=load_instruments()
+        instruments=load_from_csv(Config().csv_file_with_shares)
     )
 
     # инициируем шину событий, для обмена сообщений

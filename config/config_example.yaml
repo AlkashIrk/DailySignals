@@ -10,6 +10,9 @@ Main:
 
 
 Subscription:
+  # список инструментов для подписки
+  csv_file_with_shares: "config/shares_example.csv"
+
   # подписка на свечи
   interval: 1h
 
@@ -20,4 +23,4 @@ Subscription:
   candles_for_calculation_min_size: 100
 
   # путь до файла конфигурации сигналов
-  signals_config_path: "config/signals.yaml"
+  signals_config_path: "config/signals_example.yaml"
