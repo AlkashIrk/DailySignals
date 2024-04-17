@@ -146,10 +146,11 @@ class Trigger:
         ind_val = self.indicator.get_attribute(indicator_name)
         value = ind_val.get(place)
 
-        self.message = "{prev:0.{accuracy}f} -> {current:0.{accuracy}f}".format(
+        self.message = "{prev:0.{accuracy}f} {arrow} {current:0.{accuracy}f}".format(
             prev=ind_val.get(Attributes.prev),
             current=ind_val.get(Attributes.current),
             accuracy=self.indicator.round_var,
+            arrow=Attributes.arrow_sign_utf8,
         )
 
         if rule.get(Attributes.lower) is not None:
@@ -236,16 +237,16 @@ class Trigger:
             self.__prepare_message(Attributes.equal_)
             return value_a == value_b
         elif upper_:
-            self.__prepare_message(Attributes.upper_)
+            self.__prepare_message(Attributes.upper_sign_utf8)
             return value_a > value_b
         elif upper_or_equal_:
-            self.__prepare_message(Attributes.upper_or_equal_)
+            self.__prepare_message(Attributes.upper_or_equal_sign_utf8)
             return value_a >= value_b
         elif lower_:
-            self.__prepare_message(Attributes.lower_)
+            self.__prepare_message(Attributes.lower_sign_utf8)
             return value_a < value_b
         elif lower_or_equal_:
-            self.__prepare_message(Attributes.lower_or_equal_)
+            self.__prepare_message(Attributes.lower_or_equal_sign_utf8)
             return value_a <= value_b
 
         return value

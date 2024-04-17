@@ -49,12 +49,23 @@ class Attributes:
     # region Доступные поля-значения для парсинга условий сравнения
     # меньше
     lower_ = "<"
+    lower_sign_utf8 = "\u226A"
+
     # меньше или равен
     lower_or_equal_ = "<="
+    lower_or_equal_sign_utf8 = "\u2264"
+
     # больше
     upper_ = ">"
+    upper_sign_utf8 = "\u226B"
+
     # больше или равен
     upper_or_equal_ = ">="
+    upper_or_equal_sign_utf8 = "\u2265"
+
     # равен
     equal_ = "="
+
+    # стрелка для сообщений
+    arrow_sign_utf8 = "\u2192"
     # endregion
