@@ -24,6 +24,9 @@ class Attributes:
     # интервал (в минутах) для расчета сигналов
     calculate_signals_interval = "calculate_signals_interval"
 
+    # интервал (в минутах) для ограничения отправки сообщений в чат
+    signals_interval = "signals_interval"
+
     # минимальное количество свечей для расчета
     candles_for_calculation_min_size = "candles_for_calculation_min_size"
 

@@ -60,6 +60,9 @@ class Config(Singleton):
     # интервал (в минутах) для расчета сигналов
     calculate_signals_interval: int
 
+    # интервал (в минутах) для ограничения отправки сообщений в чат
+    signals_interval: int
+
     first_load = True
 
     def __init__(self, config_path=DEFAULT_CONFIG_PATH):
@@ -140,6 +143,9 @@ class Config(Singleton):
         self.__check_interval(section)
 
         # интервал (в минутах) для расчета сигналов
+        self.__check_calc_signal_interval(section)
+
+        # интервал (в минутах) для ограничения отправки сообщений в чат
         self.__check_signal_interval(section)
 
         # конфигурация для расчета сигналов
@@ -230,7 +236,7 @@ class Config(Singleton):
 
         self.subscription_interval = intervals.get(config_value.lower())
 
-    def __check_signal_interval(self, section: dict):
+    def __check_calc_signal_interval(self, section: dict):
         """
         Чтение и валидация параметра отвечающего за интервал расчета сигналов по индикаторам
         :param section:
@@ -248,6 +254,25 @@ class Config(Singleton):
             print(text)
         else:
             self.calculate_signals_interval = config_value
+
+    def __check_signal_interval(self, section: dict):
+        """
+        Чтение и валидация параметра отвечающего за интервал отправки сигналов по индикаторам
+        :param section:
+        :return:
+        """
+        config_value = case_insensitive(target=section,
+                                        search_attribute=Attributes.signals_interval
+                                        )
+        if type(config_value) != int:
+            self.signals_interval = 360
+            text = "\tЗначение для параметра {param} установлено по умолчанию на: {def_value} минут".format(
+                param=Attributes.signals_interval,
+                def_value=360
+            )
+            print(text)
+        else:
+            self.signals_interval = config_value
 
     def __check_signal_config_path(self, section: dict):
         """
