@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from tinkoff.invest import SubscriptionInterval, CandleInstrument, InfoInstrument
 
+from commons.tinkoff.check_instrument import get_instrument
 from model.data_structure.Instrument import Instrument
 
 
@@ -49,5 +50,25 @@ class SubsInstruments:
         for instrument in self.instruments:
             instrument: Instrument = instrument
             instrument_dict.update({instrument.figi: instrument})
+
+        return instrument_dict
+
+    def check(self):
+        """
+        Проверка наличия инструмента на бирже
+        :return:
+        """
+        instrument_dict = {}
+        instrument_ignore = []
+        for instrument in self.instruments:
+            instrument: Instrument = instrument
+            value = get_instrument(instrument)
+            if value is not None:
+                instrument_dict.update({instrument.figi: instrument})
+            else:
+                instrument_ignore.append(instrument)
+
+        for instrument in instrument_ignore:
+            self.instruments.remove(instrument)
 
         return instrument_dict

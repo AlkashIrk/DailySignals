@@ -14,11 +14,13 @@ from model.data_structure.Instrument import Instrument
 def get_history_candles(
         instrument: Instrument,
         candles_size=0,
+        level=0,
         date_to: Optional[datetime] = None, ) -> List["HistoricCandle"]:
     """
     Получение свечей через запрос
     :param instrument: запрашиваемый инструмент
     :param candles_size: количество свечей для рекурсионного вызова
+    :param level: уровень рекурсии
     :param date_to: конечная дата запроса
     :return:
     """
@@ -47,22 +49,28 @@ def get_history_candles(
         date_from = date_to - timedelta(days=1)
 
     with authorize(auth=auth) as client:
-        response = client.market_data.get_candles(
-            figi=instrument.figi,
-            from_=date_from,
-            to=date_to,
-            interval=Config().subscription_interval
-        )
+        try:
+            response = client.market_data.get_candles(
+                figi=instrument.figi,
+                from_=date_from,
+                to=date_to,
+                interval=Config().subscription_interval
+            )
+        except Exception as e:
+            print("\t%s" % e)
+            return []
         result = response.candles
         if len(result) + candles_size < Config().candles_for_calculation_min_size:
-
             # лимит 300 запросов в минуту (Сервис котировок)
             # https://russianinvestments.github.io/investAPI/limits/
             sleep(0.25)
-
-            previous_period = get_history_candles(instrument=instrument,
-                                                  candles_size=len(result) + candles_size,
-                                                  date_to=date_from)
+            if level < 10:
+                previous_period = get_history_candles(instrument=instrument,
+                                                      candles_size=len(result) + candles_size,
+                                                      level=level + 1,
+                                                      date_to=date_from)
+            else:
+                previous_period = []
             previous_period.extend(result)
             result = previous_period
     return result

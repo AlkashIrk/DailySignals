@@ -28,17 +28,20 @@ def connect_to_api():
     # объект для авторизации
     auth = AuthData(token=Config().tinkoff_token)
 
-    # задаем список интересующих инструментов и интервал для подписки на свечи
-    instruments = SubsInstruments(
-        interval=Config().subscription_interval,
-        instruments=load_from_csv(Config().csv_file_with_shares)
-    )
-
     # инициируем шину событий, для обмена сообщений
     init_event_bus()
 
     while True:
         try:
+            # задаем список интересующих инструментов и интервал для подписки на свечи
+            instruments = SubsInstruments(
+                interval=Config().subscription_interval,
+                instruments=load_from_csv(Config().csv_file_with_shares)
+            )
+
+            # проверяем актиальность инструментов
+            instruments.check()
+
             # заполняем inMemory репозиторий инструментами и историческими свечами
             MemCandleRepository.update_instruments(instruments.get_instrument_by_figi_dict())
             asyncio.run(subscribe(auth, instruments))
