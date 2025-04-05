@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import yaml
 from tinkoff.invest import SubscriptionInterval
@@ -6,6 +7,8 @@ from tinkoff.invest import SubscriptionInterval
 from commons.search_helper import case_insensitive
 from model.Singleton import Singleton
 from model.config.Attributes import Attributes
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # путь до конфигурации по умолчанию
 DEFAULT_CONFIG_PATH = "config/config.yaml"
