@@ -39,7 +39,7 @@ def connect_to_api():
                 instruments=load_from_csv(Config().csv_file_with_shares)
             )
 
-            # проверяем актиальность инструментов
+            # проверяем актуальность инструментов
             instruments.check()
 
             # заполняем inMemory репозиторий инструментами и историческими свечами
@@ -74,7 +74,7 @@ async def subscribe(auth: AuthData,
         # инициализация watch_dog подписки
         watch_dog = Timer(WATCHDOG_TIMEOUT_SEC, timeout_callback, market_data_stream)
 
-        # подпиcка на свечи
+        # подписка на свечи
         market_data_stream.candles.subscribe(instruments.get_subscribe_list_for_candles())
         sleep(1)
 

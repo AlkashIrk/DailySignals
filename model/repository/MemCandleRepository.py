@@ -50,7 +50,7 @@ class MemCandleRepository(Singleton):
         candles.append(candle_info=candle)
         cls.candles.update({figi: candles})
 
-        # последнияя цена по инструменту
+        # последняя цена по инструменту
         instrument.last_price = candle.close
 
         # сообщение в EventBus о новой свече
@@ -61,7 +61,7 @@ class MemCandleRepository(Singleton):
     @classmethod
     def __get_candles(cls, event: Candle) -> CandlesInfo:
         """
-        Получение свечей по Candel-event из памяти
+        Получение свечей по Candle-event из памяти
         :param event:
         :return:
         """
@@ -105,7 +105,7 @@ class MemCandleRepository(Singleton):
     @classmethod
     def __prepare_candles(cls):
         """
-        Проверка наличия достаточного количества свечей для расчета осциляторов/индикаторов
+        Проверка наличия достаточного количества свечей для расчета осцилляторов/индикаторов
         :return:
         """
 

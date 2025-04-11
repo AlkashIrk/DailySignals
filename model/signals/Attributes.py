@@ -29,7 +29,7 @@ class Attributes:
 
     # строго меньше чем
     lower = "lower"
-    # меньше или равеч чем
+    # меньше или равен чем
     lower_or_equal = "lower_or_equal"
 
     # строго больше чем

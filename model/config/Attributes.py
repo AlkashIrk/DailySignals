@@ -6,10 +6,10 @@ class Attributes:
     # токен от investAPI
     tinkoff_token = "tinkoff_token"
 
-    # токен от телеграма
+    # токен от Telegram
     telegram_token = "telegram_token"
 
-    # токен от телеграма
+    # токен от Telegram
     telegram_chat_id = "telegram_chat_id"
 
     # endregion

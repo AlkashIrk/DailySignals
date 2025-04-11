@@ -61,7 +61,7 @@ class Signal:
 
         # сумма по сигналам
         width_triggered = 0
-        # список сработовших сигналов
+        # список сработавших сигналов
         triggered_signals = []
 
         for indicator in Indicator.__subclasses__():
@@ -241,11 +241,11 @@ class Signal:
                                       rule=rules.get(rule)
                                       )
 
-                    # пробуем получить список тригеров по индикатору
+                    # пробуем получить список триггеров по индикатору
                     indicator_triggers = self.signal_triggers.get(indicator_name, [])
                     indicator_triggers.append(trigger)
 
-                    # обновляем список тригеров по индикатору
+                    # обновляем список триггеров по индикатору
                     self.signal_triggers.update({indicator_name: indicator_triggers})
                     # обновляем Set используемых индикаторов
                     self.used_indicators.add(indicator_name)

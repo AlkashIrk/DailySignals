@@ -19,7 +19,7 @@ def get_history_candles(
     """
     Получение свечей через запрос
     :param instrument: запрашиваемый инструмент
-    :param candles_size: количество свечей для рекурсионного вызова
+    :param candles_size: количество свечей для рекурсивного вызова
     :param level: уровень рекурсии
     :param date_to: конечная дата запроса
     :return:

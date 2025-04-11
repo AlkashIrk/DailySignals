@@ -2,10 +2,10 @@ Main:
   # токен для подключения к API Тинькофф Инвестиции
   tinkoff_token: YOUR_TOKEN
 
-  # токен для отправки сообщений в телеграм
+  # токен для отправки сообщений в Telegram
   telegram_token: YOUR_TOKEN
 
-  # ID телеграм канала
+  # ID Telegram канала
   telegram_chat_id: -1234567890
 
 

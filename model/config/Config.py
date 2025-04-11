@@ -45,7 +45,7 @@ class Config(Singleton):
     # включены ли сообщения в Telegram
     telegram_enabled: bool
 
-    # токен для отправки сообщений в телеграм
+    # токен для отправки сообщений в Telegram
     telegram_token: str
 
     # ID чата для сообщения
@@ -113,7 +113,7 @@ class Config(Singleton):
         self.tinkoff_token = case_insensitive(target=section,
                                               search_attribute=Attributes.tinkoff_token
                                               )
-        # чтение токена от телеграма
+        # чтение токена от Telegram
         self.telegram_token = case_insensitive(target=section,
                                                search_attribute=Attributes.telegram_token
                                                )
