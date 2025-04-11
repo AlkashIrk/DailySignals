@@ -110,7 +110,7 @@ def candle_event(event: Candle):
     """
 
     # обновляем репозиторий свежими данными
-    MemCandleRepository.update_candles(event=event, print_to_console=True)
+    MemCandleRepository.update_candles(event=event, print_to_console=False)
 
 
 def info_event(event: TradingStatus):
