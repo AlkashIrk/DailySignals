@@ -1,39 +1,57 @@
-let socket = io();
-let connected = false;
+var socket = io();
+var connected = false;
+var i = 0;
 
+//обновление состояния toggle кнопки обновления
 document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelector('#SwitchUpdate').checked = (isNeedUpdate())
+});
+
+//подписка на события ws
+document.addEventListener('DOMContentLoaded', (event) => {
+    //событие подключения
     socket.on('connect', function () {
         console.log('Connected to server');
         connected = true;
+        i = 0;
         pingSend();
     });
 
+    //событие отключения
     socket.on('disconnect', function () {
         console.log('Disconnected from server');
         connected = false;
+        i = -10;
     });
 
+    //событие обновления данных
     socket.on('update', function (data) {
-        console.log(data);
+        //console.log(data);
         update(data);
     });
 });
 
+//асинхронная отправка ping
 async function pingSend() {
-    let i = 0;
     // выводит 0, затем 1, затем 2
-    while (connected) {
+    while (connected && i>=0) {
         socket.send('ping_' + i.toString());
-        socket.emit('update', window.location.pathname);
+        //в случае необходимости запрашиваем новые данные
+        if (isNeedUpdate()) {
+            socket.emit('update', window.location.pathname);
+        }
         i++;
         await sleep(5000);
     }
 }
 
+//асинхронный таймаут
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+//основная функция обновления времени
 function update(data) {
     for (let key of Object.keys(data)) {
         let e_id = data.id + "_" + key;
@@ -64,6 +82,7 @@ function update(data) {
     }
 }
 
+//получение даты в виде ГГГГ-ММ-ДД ЧЧ:ММ:СС из unix timestamp
 function getTimeFromTimestamp(unix_timestamp) {
     if (unix_timestamp === 0) {
         return "-";
@@ -80,7 +99,24 @@ function getTimeFromTimestamp(unix_timestamp) {
     return formattedDateTime;
 }
 
+//форматированный вывод чисел 1 000 000
 function getFormatedValue(value) {
     let formattedValue = value.toLocaleString('en-US').replaceAll(',', ' ');
     return formattedValue;
+}
+
+//проверка необходимости обновления
+function isNeedUpdate() {
+    let status = localStorage.getItem('update');
+    let value = (status === '1' || status === null);
+    return value;
+}
+
+//сохранение состояния обновления в localStorage
+function setUpdate() {
+    if (isNeedUpdate()) {
+        localStorage.setItem('update', 0);
+    } else {
+        localStorage.setItem('update', 1);
+    }
 }
