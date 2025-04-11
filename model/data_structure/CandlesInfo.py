@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from typing import List, Optional
 
@@ -39,6 +40,7 @@ class CandlesInfo:
 
 class CandleInfo:
     time: datetime
+    update_moment: int = 0
     figi: str
     interval: SubscriptionInterval
     volume: int
@@ -53,6 +55,7 @@ class CandleInfo:
 
         self.time = candle_event.time
         self.volume = candle_event.volume
+        self.update_moment = int(time.time())
 
         self.open = get_float_from_quo(candle_event.open)
         self.close = get_float_from_quo(candle_event.close)
@@ -108,7 +111,8 @@ class CandleInfo:
             'close': self.close,
             'low': self.low,
             'high': self.high,
-            'volume': self.volume
+            'volume': self.volume,
+            'update_moment': self.update_moment
         }
 
     def print(self,

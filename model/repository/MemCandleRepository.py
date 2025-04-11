@@ -59,6 +59,10 @@ class MemCandleRepository(Singleton):
                       )
 
     @classmethod
+    def get_all_candles(cls) -> dict:
+        return cls.candles
+
+    @classmethod
     def __get_candles(cls, event: Candle) -> CandlesInfo:
         """
         Получение свечей по Candle-event из памяти

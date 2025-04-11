@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Заголовок{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- Custom styles for this template -->
+<link href="{{ url_for('static', filename='css/product.css')}}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/stonks.css')}}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    <div class="st position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light ">
+        <div class="col-md-10 p-lg-5 mx-auto my-5 up10">
+            <h1 class="display-4 fw-normal color-white">Заголовок</h1>
+            <p class="lead fw-normal color-white">И еще более остроумный подзаголовок в придачу. Начните свои
+                маркетинговые усилия с
+                этого примера, основанного на маркетинговых страницах Apple.</p>
+            <a class="btn btn-outline-secondary color-white" href="/instruments">Скоро будет</a>
+
+            <div class="superstonks">
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+                <div class="stonks"></div>
+            </div>
+            <div class="chart">
+                <svg viewBox="0 0 1003.69 498.87" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <style>.a{fill:none;stroke:#fefeff;stroke-miterlimit:10;stroke-width:4px;}.b{fill:#d24a45;}
+                        </style>
+                    </defs>
+                    <polyline class="a"
+                              points="1.77 497.94 15.65 471.44 28.47 481.7 39.58 462.89 49.84 473.15 66.93 404.78 79.75 432.98 97.7 353.49 113.09 359.48 125.91 332.98 147.28 334.69 159.24 302.21 178.04 302.21 189.16 259.48 201.98 258.62 225.05 226.14 242.15 267.17 252.4 253.49 264.37 271.44 275.48 319.31 291.72 301.36 304.54 327 325.05 331.27 368.64 343.24 374.63 290.25 394.28 254.35 421.63 217.6 429.33 257.77 453.26 192.81 468.64 220.16 483.17 238.11 512.23 227.85 543 195.37 556.68 174.86 566.08 174.86 576.34 156.06 592.58 156.91 609.67 137.25 624.2 155.2 648.13 154.35 662.66 176.57 692.58 139.82 713.94 166.31 736.16 166.31 750.7 144.09 770.35 153.49 778.04 109.05 795.14 116.74 818.22 97.94 836.16 108.19 858.39 87.68 874.63 103.92 901.12 99.65 900.27 70.59 928.47 68.02 939.58 54.35 955.82 51.78 973.77 26.14 995.14 23.58 1001.77 0.55"/>
+                    <circle class="b" cx="66.93" cy="397.94" r="6.84"/>
+                    <circle class="b" cx="225.05" cy="226.14" r="6.84"/>
+                    <circle class="b" cx="423.34" cy="214.18" r="6.84"/>
+                    <circle class="b" cx="453.26" cy="192.81" r="6.84"/>
+                    <circle class="b" cx="609.67" cy="137.25" r="6.84"/>
+                    <circle class="b" cx="901.12" cy="68.02" r="6.84"/>
+                </svg>
+            </div>
+        </div>
+
+        <div>
+            <img class="head" src="{{url_for('static', filename='img/head.webp')}}"/>
+        </div>
+    </div>
+</div>
+{% endblock %}

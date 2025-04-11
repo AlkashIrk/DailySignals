@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Свечи{% endblock %}
+
+{% block content %}
+<div>
+    <div class="fixed-table-container table-responsive">
+        <table class="table caption-top table-striped table-hover">
+            {% block table_caption %}
+            <caption>Список последних свечей</caption>
+            {% endblock %}
+            <thead class="sticky-header">
+            <tr>
+                <th scope="col">#</th>
+                {% for col in colnames %}
+                <th scope="col">{{ col }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for record in records %}
+            <tr>
+                <th class="align-middle" scope="row">{{ loop.index }}</th>
+                {% for col in colnames %}
+                {% if col == "id" %}
+                {% elif col == "name" %}
+                <td class="align-middle">
+                    <a data-type="baseurl"
+                       data-url="/candles/"
+                       data-url-key="ticker"
+                       data-value="{{record[col]}}"
+                       href="/candles/{{ record.ticker }}"
+                       id="{{ record.id }}_{{ col }}">{{ record[col] }}
+                    </a>
+                </td>
+                {% elif col == "ticker" %}
+                <td class="align-middle">
+                    <div>
+                        <a data-type="baseurl"
+                           data-url="https://www.tbank.ru/invest/stocks/"
+                           data-url-key="ticker"
+                           data-value="{{record[col]}}"
+                           href="https://www.tbank.ru/invest/stocks/{{ record.ticker }}/"
+                           id="{{ record.id }}_{{ col }}">{{ record[col] }}</a>
+                    </div>
+                </td>
+                {% elif col == "volume" %}
+                <td class="align-middle" data-type="int" data-value="{{ record[col] | int}}"
+                    id="{{ record.id }}_{{ col }}">
+                    {{ format_value(record[col]) }}
+                </td>
+                {% elif col == "update_moment" or col == "time" %}
+                <td class="align-middle text-center" data-type="timestamp" data-value="{{ record[col] | int }}"
+                    id="{{ record.id }}_{{ col }}">
+                    {% if record[col] == 0 %}
+                    -
+                    {% else %}
+                    {{ record[col] | ctime }}
+                    {% endif %}
+                </td>
+                {% elif col == "low" or col == "high" or col == "open" or col == "close" %}
+                <td class="align-middle" data-type="float" data-value="{{ record[col] }}"
+                    id="{{ record.id }}_{{ col }}">
+                    {{ format_value(record[col]) }}
+                </td>
+                {% else %}
+                <td class="align-middle" data-value="{{record[col]}}" id="{{ record.id }}_{{ col }}">
+                    {{ record[col] }}
+                </td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

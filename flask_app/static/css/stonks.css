@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Mega&display=swap');
+.st {
+  display: flex;
+  background-image: url(/static/img/stonks.webp);
+  /* height:50vh; */
+  margin:0;
+  justify-content: center;
+  align-items: flex-end;
+  background-position: left;
+  background-size:200%;
+  animation: body 10s linear infinite;
+  overflow: hidden;
+}
+
+.up10 {
+   z-index: 10;
+}
+
+@keyframes body {
+  100%{background-position: right;}
+}
+
+.color-white {
+  color: white;
+  z-index:10;
+}
+h1 span {
+  font-size:3vw;
+}
+
+img.head {
+  position: absolute;
+  height:7vw;
+  animation: head 10s linear infinite;
+}
+@keyframes head {
+  0% {left:0;top:0;transform:rotate(0deg);}
+  20% {left:50%;top:50%;transform:rotate(180deg);}
+  50% {left:90%;top:0;transform:rotate(360deg);}
+  70%{left:50%;top:50%;transform:rotate(720deg);}
+  100% {left:0;top:0;transform:rotate(0deg);}
+}
+.chart {
+  position: absolute;
+  left: -20px;
+  top: 20px;
+  width: 0;
+  z-index: 5;
+  overflow: hidden;
+  animation: chart 20s linear infinite;
+}
+.chart svg {
+    filter: drop-shadow(0 0 3px white);
+    width: 1300px;
+}
+@keyframes chart {
+  100% {width:100%}
+}
+.superstonks {
+  position:absolute;
+  left:0;
+  width: 150%;
+  display: flex;
+  align-items: flex-end;
+  animation: superstonks 5s infinite linear;
+}
+
+@keyframes superstonks {
+  100%{left:-50%}
+}
+.stonks {
+  width:10%;
+  background:#1e4d84;
+  margin:1px;
+  filter:blur(1px);
+  opacity:0.7;
+  height:3vh;
+  animation: stonks linear;
+  box-shadow: 20px 20px 5px black;
+}
+.stonks:nth-child(3n) {
+  animation-duration: 54s;
+  height:28vh;
+  animation-delay:1s;
+}
+.stonks:nth-child(4n) {
+  animation-duration: 90s;
+  height:3vh;
+}
+.stonks:nth-child(5n) {
+  animation-duration: 24s;
+  height:19vh;
+  animation-delay:2s;
+}
+.stonks:nth-child(6n) {
+  animation-duration: 40s;
+  height:50vh;
+  animation-delay:.6s;
+}
+.stonks:nth-child(7n) {
+  animation-duration: 30s;
+  height:34vh;
+  animation-delay:3s;
+}
+.stonks:nth-child(8n) {
+  animation-duration: 15s;
+  height:20vh;
+  animation-delay:4s;
+}
+.stonks:nth-child(9n) {
+  animation-duration: 8s;
+  height:3vh;
+  animation-delay:.3s;
+}
+.stonks:nth-child(10n) {
+  animation-duration: 5s;
+  height:10vh;
+  animation-delay:5s;
+}
+.stonks:nth-child(11n) {
+  animation-duration: 25s;
+  height:3vh;
+  background: #96acc6;
+  opacity: 0.4;
+}
+.stonks:nth-child(odd) {
+  animation-duration: 25s;
+  height:3vh;
+  opacity: 0.4;
+}
+@keyframes stonks {
+ 50% {height: 90vh}
+}

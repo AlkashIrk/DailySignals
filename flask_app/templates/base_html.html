@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="h-100" lang="ru">
+<head>
+    {% block head %}
+    {% endblock %}
+</head>
+<body class="h-100">
+<div class="d-flex flex-column h-100">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation"
+                    class="navbar-toggler" data-bs-target="#navbarToggler" data-bs-toggle="collapse"
+                    type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggler">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a aria-current="page" class="nav-link {% if instruments_page %}active{% endif %}"
+                           href="/instruments">Акции</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if candles_page %}active{% endif %}" href="/candles">Свечи</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block divcontent %}
+    <div class="container-md d-flex flex-column h-100">
+
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="fixed-bottom">
+            <div id="footer">
+                {% block footer %}
+                &copy; Copyright {{today_year}} by <a class="text-bg-info"
+                                                      href="https://github.com/AlkashIrk/DailySignals">Alkash</a>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+</body>
+</html>

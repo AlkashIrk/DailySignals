@@ -2,6 +2,7 @@ import os
 import warnings
 
 import yaml
+from pandas.errors import SettingWithCopyWarning
 from tinkoff.invest import SubscriptionInterval
 
 from commons.search_helper import case_insensitive
@@ -9,6 +10,7 @@ from model.Singleton import Singleton
 from model.config.Attributes import Attributes
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore', category=SettingWithCopyWarning)
 
 # путь до конфигурации по умолчанию
 DEFAULT_CONFIG_PATH = "config/config.yaml"

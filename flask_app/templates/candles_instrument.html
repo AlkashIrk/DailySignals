@@ -1,0 +1,8 @@
+{% extends "candles.html" %}
+{% block title %}Свечи {{ instrument }}{% endblock %}
+
+{% block table_caption %}
+<caption>Список последних свечей {{ instrument }}
+    <a href="https://www.tbank.ru/invest/stocks/{{ ticker }}/"> ({{ ticker }})</a>
+</caption>
+{% endblock %}

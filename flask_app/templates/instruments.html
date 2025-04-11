@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Акции{% endblock %}
+
+{% block content %}
+<div>
+    <div class="fixed-table-container table-responsive">
+        <table class="table caption-top table-striped table-hover">
+            <caption>Список запрашиваемых акций</caption>
+            <thead class="sticky-header">
+            <tr>
+                <th scope="col">#</th>
+                {% for col in colnames %}
+                <th scope="col">{{ col }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for record in records %}
+            <tr>
+                <th class="align-middle" scope="row">{{ loop.index }}</th>
+                {% for col in colnames %}
+                {% if col == "last_price" %}
+                <td class="align-middle">
+                    <div class="" data-type="float" data-value="{{ record[col] }}" id="{{ record.id }}_{{ col }}">
+                        {% if record[col] == 0 %}
+                        {% else %}
+                        {{ format_value(record[col]) }}
+                        {% endif %}
+                    </div>
+                </td>
+                {% elif col == "ticker" %}
+                <td class="align-middle">
+                    <div class="">
+                        <a href="https://www.tbank.ru/invest/stocks/{{ record.ticker }}/">{{ record[col] }}</a>
+                    </div>
+                </td>
+                {% else %}
+                <td class="align-middle">
+                    <div class="text-truncate text-wrap" data-value="{{ record[col] }}">{{ record[col] }}</div>
+                </td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
