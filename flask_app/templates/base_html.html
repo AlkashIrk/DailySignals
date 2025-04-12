@@ -43,8 +43,10 @@
         <div class="fixed-bottom">
             <div id="footer">
                 {% block footer %}
-                &copy; Copyright {{today_year}} by <a class="text-bg-info"
-                                                      href="https://github.com/AlkashIrk/DailySignals">Alkash</a>
+                <span class="border border-secondary rounded-top rounded-2 bg-white">
+                    &copy; Copyright {{today_year}} by <a class="link-danger"
+                                                          href="https://github.com/AlkashIrk/DailySignals">Alkash </a>
+                </span>
                 {% endblock %}
             </div>
         </div>
