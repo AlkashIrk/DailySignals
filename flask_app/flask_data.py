@@ -62,6 +62,7 @@ def prepare_candles() -> DataFrame:
     if pd_data.shape[0] != 0:
         pd_data.sort_values(['update_moment', 'time', 'name'], ascending=[False, False, True], inplace=True)
         slice = pd_data[:50]
+        slice.sort_values(['time', 'volume', 'update_moment'], ascending=[False, False, False], inplace=True)
         slice['time'] = slice['time'].astype(int) / 10 ** 9
         slice['id'] = np.arange(slice.shape[0])
         slice = slice[['id', 'name', 'ticker', 'time', 'open', 'close', 'low', 'high', 'volume', 'update_moment']]
