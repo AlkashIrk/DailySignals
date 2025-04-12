@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Акции{% endblock %}
 
+{% block head %}
+{{ super() }}
+<script src="{{ url_for('static', filename='scripts/trade_status.js')}}"></script>
+{% endblock %}
+
 {% block content %}
 <div>
     <div class="fixed-table-container table-responsive">
@@ -16,7 +21,7 @@
             </thead>
             <tbody>
             {% for record in records %}
-            <tr>
+            <tr id="row_{{ record.id }}" {% if record.is_trade== false %} class="table-warning" {% endif %}>
                 <th class="align-middle" scope="row">{{ loop.index }}</th>
                 {% for col in colnames %}
                 {% if col == "last_price" %}

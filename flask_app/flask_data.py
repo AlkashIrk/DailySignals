@@ -3,6 +3,7 @@ import time
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
+from tinkoff.invest import TradingStatus
 
 from model.repository.MemCandleRepository import MemCandleRepository
 
@@ -19,15 +20,23 @@ def prepare_instruments() -> DataFrame:
         return cached
 
     values = dict(MemCandleRepository.get_all_candles())
+    trade = dict(MemCandleRepository.get_trade_status())
 
     result = []
     for k, v in values.items():
+        is_trade = False
+        trade_value = trade.get(k)
+        if trade_value is not None:
+            trade_value: TradingStatus = trade_value
+            is_trade = trade_value.market_order_available_flag
+
         row = {
             "id": v.instrument.ticker,
             "name": v.instrument.name,
             "ticker": v.instrument.ticker,
             "figi": v.instrument.figi,
-            "last_price": v.instrument.last_price
+            "last_price": v.instrument.last_price,
+            "is_trade": is_trade
         }
         result.append(row)
 

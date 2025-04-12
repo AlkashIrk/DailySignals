@@ -17,6 +17,8 @@ def init_views(app: Flask):
         col_names = list(df.columns)
         if 'id' in col_names:
             col_names.remove('id')
+            col_names.remove('is_trade')
+
         return render_template('instruments.html',
                                records=records,
                                colnames=col_names,

@@ -1,5 +1,5 @@
 from dateutil.tz import tz
-from tinkoff.invest import Candle
+from tinkoff.invest import Candle, TradingStatus
 
 from commons.tinkoff.history_data import get_history_candles
 from model.Singleton import Singleton
@@ -18,6 +18,7 @@ class MemCandleRepository(Singleton):
     """
     instruments = {}
     candles = {}
+    status = {}
 
     @classmethod
     def update_instruments(cls, instruments_: dict):
@@ -59,8 +60,22 @@ class MemCandleRepository(Singleton):
                       )
 
     @classmethod
+    def update_trade_status(cls, event: TradingStatus):
+        """
+        Обновление данных в репозитории для свечей
+        :param event: событие по статусу        
+        :return: 
+        """""
+        figi = event.figi
+        cls.status.update({figi: event})
+
+    @classmethod
     def get_all_candles(cls) -> dict:
         return cls.candles
+
+    @classmethod
+    def get_trade_status(cls) -> dict:
+        return cls.status
 
     @classmethod
     def __get_candles(cls, event: Candle) -> CandlesInfo:

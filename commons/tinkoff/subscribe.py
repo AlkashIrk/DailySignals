@@ -120,4 +120,5 @@ def info_event(event: TradingStatus):
     :return:
     """
 
-    figi = event.figi
+    # обновляем репозиторий свежими данными
+    MemCandleRepository.update_trade_status(event=event)
