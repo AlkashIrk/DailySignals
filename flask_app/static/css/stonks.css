@@ -2,13 +2,12 @@
 .st {
   display: flex;
   background-image: url(/static/img/stonks.webp);
-  /* height:50vh; */
   margin:0;
   justify-content: center;
   align-items: flex-end;
   background-position: left;
   background-size:200%;
-  animation: body 10s linear infinite;
+  animation: body 45s linear infinite;
   overflow: hidden;
 }
 
@@ -17,7 +16,8 @@
 }
 
 @keyframes body {
-  100%{background-position: right;}
+  90%{background-position: right;}
+  100%{background-position: left;}
 }
 
 .color-white {
@@ -31,7 +31,7 @@ h1 span {
 img.head {
   position: absolute;
   height:7vw;
-  animation: head 10s linear infinite;
+  animation: head 20s linear infinite;
 }
 @keyframes head {
   0% {left:0;top:0;transform:rotate(0deg);}
@@ -42,19 +42,23 @@ img.head {
 }
 .chart {
   position: absolute;
-  left: -20px;
-  top: 20px;
+  bottom: -10px;
+  left: 0px;
   width: 0;
-  z-index: 5;
+  z-index: -1;
   overflow: hidden;
+  opacity: 0.25;
   animation: chart 20s linear infinite;
 }
 .chart svg {
     filter: drop-shadow(0 0 3px white);
-    width: 1300px;
+    width: max(1300px,100vw);
+    max-height: 800px;
 }
 @keyframes chart {
-  100% {width:100%}
+  0% {width:0vw}
+  50% {width:min(600px, 50vw)}
+  100% {width:min(1300px, 100vw)}
 }
 .superstonks {
   position:absolute;
