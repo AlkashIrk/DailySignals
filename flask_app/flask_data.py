@@ -9,6 +9,7 @@ from model.repository.MemCandleRepository import MemCandleRepository
 
 cached_data = {}
 cache_period = 10
+number_of_dec_places = 4
 
 
 def prepare_instruments() -> DataFrame:
@@ -35,7 +36,7 @@ def prepare_instruments() -> DataFrame:
             "name": v.instrument.name,
             "ticker": v.instrument.ticker,
             "figi": v.instrument.figi,
-            "last_price": v.instrument.last_price,
+            "last_price": round(v.instrument.last_price, number_of_dec_places),
             "is_trade": is_trade
         }
         result.append(row)
@@ -69,7 +70,7 @@ def prepare_candles() -> DataFrame:
 
         cols = ['open', 'close', 'low', 'high']
         for c in cols:
-            slice[c] = slice[c].apply(lambda x: round(x, 3))
+            slice[c] = slice[c].apply(lambda x: round(x, number_of_dec_places))
 
     ts = time.time()
     cached = {cached_key: dict(ts=ts, data=slice)}
@@ -96,7 +97,7 @@ def prepare_candles_ticker(ticker: str) -> DataFrame:
 
         cols = ['open', 'close', 'low', 'high']
         for c in cols:
-            slice[c] = slice[c].apply(lambda x: round(x, 3))
+            slice[c] = slice[c].apply(lambda x: round(x, number_of_dec_places))
 
     ts = time.time()
     cached = {cached_key: dict(ts=ts, data=slice)}
