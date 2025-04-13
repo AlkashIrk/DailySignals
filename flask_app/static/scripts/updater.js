@@ -70,9 +70,9 @@ function update(data) {
                 }
 
                 if (element.dataset.type === "baseurl") {
-                    let url_key = element.dataset.url-key
-                    if (element !== null) {
-                        element.href = element.dataset.url + data[url_key];
+                    let urlKey = element.dataset.urlKey
+                    if (urlKey !== null && typeof urlKey === 'string') {
+                        element.href = element.dataset.url + data[urlKey];
                     } else {
                         element.href = element.dataset.url + data[key];
                     }
