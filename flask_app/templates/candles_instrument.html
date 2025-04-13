@@ -2,7 +2,13 @@
 {% block title %}Свечи {{ instrument }}{% endblock %}
 
 {% block table_caption %}
-<caption>Список последних свечей {{ instrument }}
-    <a href="https://www.tbank.ru/invest/stocks/{{ ticker }}/"> ({{ ticker }})</a>
+<caption>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/candles">Список последних свечей</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <a href="https://www.tbank.ru/invest/stocks/{{ ticker }}/">{{ instrument }} ({{ ticker }})</a></li>
+        </ol>
+    </nav>
 </caption>
 {% endblock %}
