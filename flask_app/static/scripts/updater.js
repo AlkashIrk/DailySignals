@@ -101,7 +101,7 @@ function getTimeFromTimestamp(unix_timestamp) {
 
 //форматированный вывод чисел 1 000 000
 function getFormatedValue(value) {
-    let formattedValue = value.toLocaleString('en-US').replaceAll(',', ' ');
+    let formattedValue = value.toLocaleString('en-US').replaceAll(',', '\xa0');
     return formattedValue;
 }
 

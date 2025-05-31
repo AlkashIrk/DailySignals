@@ -44,7 +44,7 @@
                     </div>
                 </td>
                 {% elif col == "volume" %}
-                <td class="align-middle" data-type="int" data-value="{{ record[col] | int}}"
+                <td class="align-middle text-nowrap" data-type="int" data-value="{{ record[col] | int}}"
                     id="{{ record.id }}_{{ col }}">
                     {{ format_value(record[col]) }}
                 </td>
@@ -58,7 +58,7 @@
                     {% endif %}
                 </td>
                 {% elif col == "low" or col == "high" or col == "open" or col == "close" %}
-                <td class="align-middle" data-type="float" data-value="{{ record[col] }}"
+                <td class="align-middle text-nowrap" data-type="float" data-value="{{ record[col] }}"
                     id="{{ record.id }}_{{ col }}">
                     {{ format_value(record[col]) }}
                 </td>
